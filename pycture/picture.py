@@ -38,5 +38,3 @@ def calculate_len(match):
         length += int(num_in_parenthesis) - 1
 
     return length
-
-
