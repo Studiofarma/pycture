@@ -7,6 +7,7 @@ import pytest
     ('77     banana   pic    99', pyc.Picture('banana', 2)),
     (' 77 banana   pic    99   ', pyc.Picture('banana', 2)),
     (' 77 banana   pic    9(02)   ', pyc.Picture('banana', 2)),
+    (' 01 pera   pic    9(03)v9(2)   ', pyc.Picture('pera', 5)),
 ])
 def test_can_convert_a_cobol_picture_to_a_python_dictonary(picture, expected_result):
     actual_result = pyc.read_picture(picture)
