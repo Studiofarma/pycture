@@ -21,9 +21,13 @@ class Record:
 
 def read_record(picture_definition):
     lines = picture_definition.split('.')
-    interpreted_lines = [pyc.read_picture(l) for l in lines if l]
+    interpreted_lines = [pyc.read_picture(l) for l in lines if is_not_empty(l.strip())]
 
     record = interpreted_lines[0]
-    record.add(interpreted_lines[1])
+    for line in interpreted_lines[1:]:
+        record.add(line)
 
     return record
+
+def is_not_empty(string):
+    return string != ''
