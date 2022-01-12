@@ -20,11 +20,15 @@ class Picture:
 
 def read_picture(picture_string):
     picture_string_tokens = [s.strip() for s in  picture_string.split()]
+    level = int(picture_string_tokens[0])
 
     if len(picture_string_tokens) == 2:
-        return pyr.Record(picture_string_tokens[1], int(picture_string_tokens[0]))
+        return pyr.Record(picture_string_tokens[1], level)
 
-    return Picture(picture_string_tokens[1], picture_len(picture_string_tokens[3]))
+    return Picture(
+        picture_string_tokens[1],
+        picture_len(picture_string_tokens[3]),
+        level)
 
 def picture_len(picture_definition):
     matches = re.findall(r'v?([\dxz]+)(\(\s*(\d+)\s*\))*', picture_definition)

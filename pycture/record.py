@@ -7,6 +7,9 @@ class Record:
         self.level = level
         self.children = list(children)
 
+    def add(self, child):
+        self.children.append(child)
+
     def __eq__(self, other):
         return common.eq(self, other)
 
@@ -18,6 +21,9 @@ class Record:
 
 def read_record(picture_definition):
     lines = picture_definition.split('.')
-    lines_by_tokens = [l.split() for l in lines]
+    interpreted_lines = [pyc.read_picture(l) for l in lines if l]
 
-    return Record('pera', 1, pyc.Picture('banana', 2))
+    record = interpreted_lines[0]
+    record.add(interpreted_lines[1])
+
+    return record
