@@ -2,8 +2,9 @@ from pycture import picture as pyc
 from pycture import common
 
 class Record:
-    def __init__(self, name, *children):
-        self.data = name
+    def __init__(self, name, level, *children):
+        self.name = name
+        self.level = level
         self.children = list(children)
 
     def __eq__(self, other):
@@ -19,4 +20,4 @@ def read_record(picture_definition):
     lines = picture_definition.split('.')
     lines_by_tokens = [l.split() for l in lines]
 
-    return Record('pera', pyc.Picture('banana', 2))
+    return Record('pera', 1, pyc.Picture('banana', 2))

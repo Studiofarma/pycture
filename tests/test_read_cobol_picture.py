@@ -1,5 +1,6 @@
 import pytest
 from pycture import picture as pyc
+from pycture import record as pyr
 
 @pytest.mark.parametrize('picture, expected_result', [
     ('77 banana pic 9', pyc.Picture('banana', 1)),
@@ -11,6 +12,13 @@ from pycture import picture as pyc
 ])
 def test_can_convert_a_cobol_picture_to_a_picture_object(picture, expected_result):
     actual_result = pyc.read_picture(picture)
+    assert actual_result == expected_result
+
+@pytest.mark.parametrize('record, expected_result', [
+    ('01 banana', pyr.Record('banana', 1))
+])
+def test_can_convert_a_cobol_record_to_a_record_object(record, expected_result):
+    actual_result = pyc.read_picture(record)
     assert actual_result == expected_result
 
 @pytest.mark.parametrize('picture_definition, expected_result', [
