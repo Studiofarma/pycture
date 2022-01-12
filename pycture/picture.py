@@ -19,7 +19,7 @@ class Picture:
         return str(self.__dict__)
 
 def read_picture(picture_string):
-    picture_string_tokens = list(map(lambda s: s.strip(), picture_string.split()))
+    picture_string_tokens = [s.strip() for s in  picture_string.split()]
     return Picture(picture_string_tokens[1], picture_len(picture_string_tokens[3]))
 
 def picture_len(picture_definition):
