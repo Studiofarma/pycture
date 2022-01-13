@@ -26,8 +26,8 @@ from pycture import picture as pyc
     (
         """01 banana.
                 02 pera.
-                    03 seed pic 9(2)
-                    03 fruit pic x(20)
+                    03 seed pic 9(2).
+                    03 fruit pic x(20).
                 02 mela pic xxx.
         """,
         pyr.Record('banana', 1,

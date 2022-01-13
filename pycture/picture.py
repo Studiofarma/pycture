@@ -15,7 +15,7 @@ class Picture:
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    def __str__(self) -> str:
+    def __repr__(self):
         return str(self.__dict__)
 
 def read_picture(picture_string):

@@ -8,7 +8,16 @@ class Record:
         self.children = list(children)
 
     def add(self, child):
-        self.children.append(child)
+        def last_children():
+            return self.children[-1]
+
+        if not self.children or \
+            isinstance(last_children(), pyc.Picture) or \
+            last_children().level == child.level:
+
+            self.children.append(child)
+        else:
+            last_children().add(child)
 
     def __eq__(self, other):
         return common.eq(self, other)
@@ -16,7 +25,7 @@ class Record:
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    def __str__(self) -> str:
+    def __repr__(self):
         return str(self.__dict__)
 
 def read_record(picture_definition):
