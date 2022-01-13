@@ -32,8 +32,10 @@ class Record:
         return str(self.__dict__)
 
 def read_record(picture_definition):
-    pictures = [clean_comments(picture) for picture in picture_definition.split('.')]
-    interpreted_lines = [pyc.read_picture(picture) for picture in pictures if is_not_empty(picture)]
+    pictures = filter(
+        is_not_empty,
+        map(clean_comments, picture_definition.split('.')))
+    interpreted_lines = [pyc.read_picture(picture) for picture in pictures]
 
     record = interpreted_lines[0]
     for line in interpreted_lines[1:]:
@@ -42,8 +44,11 @@ def read_record(picture_definition):
     return record
 
 def clean_comments(picture):
-    picture_tokens = [token.strip() for token in picture.split('\n')]
-    no_comments = [token for token in picture_tokens if not token.startswith('|')]
+    picture_tokens = filter(
+        lambda token: not token.startswith('|'),
+        map(lambda token: token.strip(), picture.split('\n')))
+
+    no_comments = [token for token in picture_tokens]
     return str.join('', no_comments)
 
 def is_not_empty(string):
