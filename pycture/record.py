@@ -19,6 +19,9 @@ class Record:
         else:
             last_children().add(child)
 
+    def size(self):
+        return sum([child.size() for child in self.children])
+
     def __eq__(self, other):
         return common.eq(self, other)
 

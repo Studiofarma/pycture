@@ -9,6 +9,9 @@ class Picture:
         self.name = name
         self.length = length
 
+    def size(self):
+        return self.length
+
     def __eq__(self, other):
         return common.eq(self, other)
 

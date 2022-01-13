@@ -48,7 +48,7 @@ from pycture import picture as pyc
                     03 seed pic 9(2).
                 02 mela.
                     03 seed pic 9(2).
-                    03 fruit pic x(20)..
+                    03 fruit pic x(20).
         """,
         pyr.Record('banana', 1,
             pyr.Record('pera', 2,
@@ -66,4 +66,26 @@ from pycture import picture as pyc
 ])
 def test_can_convert_a_cobol_picture_to_a_python_dictonary(record, expected_result):
     actual_result = pyr.read_record(record)
+    assert actual_result == expected_result
+
+@pytest.mark.parametrize('record, expected_result', [
+    (pyr.Record('banana', 1, pyc.Picture('pera', 2, 2)), 2),
+    (pyr.Record('banana', 1,
+        pyc.Picture('pera', 2, 2),
+        pyc.Picture('mela', 3, 2)), 5),
+    (pyr.Record('banana', 1,
+            pyr.Record('pera', 2,
+                pyr.Record('fruit', 3,
+                    pyc.Picture('juice', 2, level = 5),
+                    pyc.Picture('taste', 6, level = 5)
+                ),
+                pyc.Picture('seed', 2, level = 3),
+            ),
+            pyr.Record('mela', 2,
+                pyc.Picture('seed', 2, level = 3),
+                pyc.Picture('fruit', 20, level = 3)
+            )), 32)
+])
+def test_return_the_size_of_the_record(record, expected_result):
+    actual_result = record.size()
     assert actual_result == expected_result
