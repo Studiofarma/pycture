@@ -148,7 +148,7 @@ debug *    sdati-numero-riga       pic 9(08).
             pyc.Picture('sdati-cod-farm', 6, level = 5))
     )
 ])
-def test_can_convert_a_cobol_picture_to_a_python_dictonary(record, expected_result):
+def test_can_read_a_cobol_record(record, expected_result):
     actual_result = pyr.read_record(record)
     assert actual_result == expected_result
 

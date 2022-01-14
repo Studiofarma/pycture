@@ -17,9 +17,12 @@ class Record:
             isinstance(last_children(), pyc.Picture) or \
             last_children().level == child.level:
 
-            self.children.append(child)
+            return self._with_child(self.children + [child])
         else:
-            last_children().add(child)
+            return self._with_child(self.children[:-1] + [last_children().add(child)])
+
+    def _with_child(self, children):
+        return Record(self.name, self.level, *(children))
 
     @cached_property
     def size(self):
@@ -43,7 +46,7 @@ def read_record(picture_definition):
 
     record = interpreted_lines[0]
     for line in interpreted_lines[1:]:
-        record.add(line)
+        record = record.add(line)
 
     return record
 

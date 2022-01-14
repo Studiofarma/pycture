@@ -6,20 +6,20 @@ from pycture import structure as pys
 @pytest.mark.parametrize('record, expected_result', [
     (
         pyc.Picture('pera', 2, level=1),
-        pys.Structure('pera', start_at = 0)
+        pys.Structure('pera', start_at = 0, length = 2)
     ),
     (
         pyr.Record('banana', 1, pyc.Picture('pera', 2, 2)),
-        pys.Structure('banana', 0,
-            pys.Structure('banana.pera', start_at = 0))
+        pys.Structure('banana', 0, 2,
+            pys.Structure('banana.pera', start_at = 0, length = 2))
     ),
     (
         pyr.Record('banana', 1,
             pyc.Picture('pera', length = 2, level = 2),
             pyc.Picture('mela', length = 3, level = 2)),
-        pys.Structure('banana', 0,
-            pys.Structure('banana.pera', start_at = 0),
-            pys.Structure('banana.mela', start_at = 2)
+        pys.Structure('banana', 0, 5,
+            pys.Structure('banana.pera', start_at = 0, length = 2),
+            pys.Structure('banana.mela', start_at = 2, length = 3)
             )
     ),
     (
@@ -29,12 +29,12 @@ from pycture import structure as pys
                 pyc.Picture('fruit', length = 20, level = 3)
             ),
             pyc.Picture('mela', length = 3, level = 2)),
-        pys.Structure('banana', 0,
-            pys.Structure('banana.pera', 0,
-                pys.Structure('banana.pera.seed', start_at = 0),
-                pys.Structure('banana.pera.fruit', start_at = 2),
+        pys.Structure('banana', 0, 25,
+            pys.Structure('banana.pera', 0, 22,
+                pys.Structure('banana.pera.seed', start_at = 0, length = 2),
+                pys.Structure('banana.pera.fruit', start_at = 2, length = 20),
                 ),
-            pys.Structure('banana.mela', start_at = 22)
+            pys.Structure('banana.mela', start_at = 22, length = 3)
             )
     ),
 ])
