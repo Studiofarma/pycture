@@ -9,6 +9,7 @@ class Picture:
         self.name = name
         self.length = length
 
+    @property
     def size(self):
         return self.length
 

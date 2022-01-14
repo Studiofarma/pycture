@@ -36,8 +36,8 @@ from pycture import structure as pys
                 ),
             pys.Structure('banana.mela', start_at = 22)
             )
-    ),    
+    ),
 ])
-def test_can_convert_a_cobol_picture_to_a_python_dictonary(record, expected_result):
+def test_can_provide_the_structure_of_a_record(record, expected_result):
     actual_result = pys.read_structure(record)
     assert actual_result == expected_result

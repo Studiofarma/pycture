@@ -1,6 +1,7 @@
+import itertools as it
+from functools import cached_property
 from pycture import picture as pyc
 from pycture import common
-import itertools as it
 
 class Record:
     def __init__(self, name, level, *children):
@@ -20,8 +21,9 @@ class Record:
         else:
             last_children().add(child)
 
+    @cached_property
     def size(self):
-        return sum([child.size() for child in self.children])
+        return sum([child.size for child in self.children])
 
     def __eq__(self, other):
         return common.eq(self, other)

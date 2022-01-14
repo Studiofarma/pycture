@@ -171,5 +171,5 @@ def test_can_convert_a_cobol_picture_to_a_python_dictonary(record, expected_resu
             )), 32)
 ])
 def test_return_the_size_of_the_record(record, expected_result):
-    actual_result = record.size()
+    actual_result = record.size
     assert actual_result == expected_result
