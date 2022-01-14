@@ -1,7 +1,9 @@
 import re
 import functools as ft
+from functools import cached_property
 from pycture import common
 from pycture import record as pyr
+from pycture import structure as pys
 
 class Picture:
     def __init__(self, name, length, level = 77):
@@ -12,6 +14,10 @@ class Picture:
     @property
     def size(self):
         return self.length
+
+    @cached_property
+    def structure(self):
+        return pys.read_structure(self)
 
     def __eq__(self, other):
         return common.eq(self, other)
