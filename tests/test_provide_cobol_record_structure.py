@@ -22,6 +22,21 @@ from pycture import structure as pys
             pys.Structure('banana.mela', start_at = 2)
             )
     ),
+    (
+        pyr.Record('banana', 1,
+            pyr.Record('pera', 2,
+                pyc.Picture('seed', length = 2, level = 3),
+                pyc.Picture('fruit', length = 20, level = 3)
+            ),
+            pyc.Picture('mela', length = 3, level = 2)),
+        pys.Structure('banana', 0,
+            pys.Structure('banana.pera', 0,
+                pys.Structure('banana.pera.seed', start_at = 0),
+                pys.Structure('banana.pera.fruit', start_at = 2),
+                ),
+            pys.Structure('banana.mela', start_at = 22)
+            )
+    ),    
 ])
 def test_can_convert_a_cobol_picture_to_a_python_dictonary(record, expected_result):
     actual_result = pys.read_structure(record)

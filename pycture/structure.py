@@ -11,7 +11,10 @@ class Structure:
         current_length = 0
         for child in children:
             structure = Structure(f'{self.name}.{child.name}', current_length)
-            current_length += child.length
+            if isinstance(child, pyr.Record):
+                structure.add(child.children)
+
+            current_length += child.size()
             self.childred_structures.append(structure)
 
     def __eq__(self, other):
