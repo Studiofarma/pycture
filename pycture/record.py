@@ -44,12 +44,14 @@ def read_record(picture_definition):
     return record
 
 def clean_comments(picture):
-    picture_tokens = filter(
-        lambda token: not token.startswith('|'),
-        map(lambda token: token.strip(), picture.split('\n')))
-
-    no_comments = [token for token in picture_tokens]
+    no_comments = [token for token in picture.split('\n') if not first_char_is(token, '|')]
     return str.join('', no_comments)
 
 def is_not_empty(string):
-    return string != ''
+    return not is_empty(string)
+
+def is_empty(string):
+    return string == '' or all(map(lambda c: c == ' ', string))
+
+def first_char_is(string, char):
+    return string.strip().startswith(char)

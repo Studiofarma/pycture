@@ -10,7 +10,15 @@ from pycture import picture as pyc
     (
         """01 banana.
                 02 pera pic 9(2).
-                
+
+        """,
+        pyr.Record('banana', 1, pyc.Picture('pera', 2, 2))
+    ),
+    (
+        """01 banana.
+                02 pera 
+                pic 9(2).
+
         """,
         pyr.Record('banana', 1, pyc.Picture('pera', 2, 2))
     ),
