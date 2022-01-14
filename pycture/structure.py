@@ -1,10 +1,18 @@
 from pycture import common
+from pycture import record as pyr
 
 class Structure:
-    def __init__(self, name, start_at, length):
+    def __init__(self, name, start_at, *childred_structures):
         self.name = name
         self.start_at = start_at
-        self.length = length
+        self.childred_structures = list(childred_structures)
+
+    def add(self, children):
+        current_length = 0
+        for child in children:
+            structure = Structure(f'{self.name}.{child.name}', current_length)
+            current_length += child.length
+            self.childred_structures.append(structure)
 
     def __eq__(self, other):
         return common.eq(self, other)
@@ -14,6 +22,9 @@ class Structure:
 
     def __repr__(self):
         return str(self.__dict__)
-    
+
 def read_structure(record):
-    return Structure(record.name, 0, record.length)
+    root = Structure(record.name, 0)
+    if isinstance(record, pyr.Record):
+        root.add(record.children)
+    return root
