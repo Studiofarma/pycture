@@ -114,6 +114,34 @@ from pycture import picture as pyc
             pyc.Picture('pera', 2, 2),
             pyc.Picture('mela', 3, 2))
     ),
+    (
+        """
+       01  rec-sdati.
+      *    any comment
+           05  rec-sdati          pic 9(06).
+        """,
+        pyr.Record('rec-sdati', 1,
+            pyc.Picture('rec-sdati', 6, level = 5))
+    ),
+    (
+        """
+       01  rec-sdati.
+      *    sdati-numero-riga       pic 9(08).
+           05  rec-sdati          pic 9(06).
+        """,
+        pyr.Record('rec-sdati', 1,
+            pyc.Picture('rec-sdati', 6, level = 5))
+    ),
+    # (
+    #     """
+    #    01  rec-sdati.
+    #   *     05  sdati-numero-riga       pic 9(08).
+    #   *     05  sdati-filler            pic x(01).
+    #        05  rec-sdati          pic 9(06).
+    #     """,
+    #     pyr.Record('rec-sdati', 1,
+    #         pyc.Picture('rec-sdati', 6, level = 5))
+    # ),
 ])
 def test_can_convert_a_cobol_picture_to_a_python_dictonary(record, expected_result):
     actual_result = pyr.read_record(record)

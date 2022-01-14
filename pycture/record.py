@@ -32,9 +32,9 @@ class Record:
         return str(self.__dict__)
 
 def read_record(picture_definition):
-    pictures = filter(
+    pictures = list(filter(
         is_not_empty,
-        map(clean_comments, picture_definition.split('.')))
+        map(clean_comments, picture_definition.split('.'))))
     interpreted_lines = [pyc.read_picture(picture) for picture in pictures]
 
     record = interpreted_lines[0]
@@ -44,7 +44,7 @@ def read_record(picture_definition):
     return record
 
 def clean_comments(picture):
-    no_comments = [token for token in picture.split('\n') if not first_char_is(token, '|')]
+    no_comments = [token for token in picture.split('\n') if not should_be_skipped(token)]
     return str.join('', no_comments)
 
 def is_not_empty(string):
@@ -55,3 +55,9 @@ def is_empty(string):
 
 def first_char_is(string, char):
     return string.strip().startswith(char)
+
+def is_a_comment_line(token):
+    return len(token) >= 7 and token[6] == '*'
+
+def should_be_skipped(token):
+    return first_char_is(token, '|') or is_a_comment_line(token)
