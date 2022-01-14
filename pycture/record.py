@@ -1,5 +1,6 @@
 from pycture import picture as pyc
 from pycture import common
+import itertools as it
 
 class Record:
     def __init__(self, name, level, *children):
@@ -32,9 +33,10 @@ class Record:
         return str(self.__dict__)
 
 def read_record(picture_definition):
-    pictures = list(filter(
+    pictures = filter(
         is_not_empty,
-        map(clean_comments, picture_definition.split('.'))))
+        map(clean_comments, picture_definition.split('.')))
+    pictures = it.dropwhile(lambda p: not is_a_root_variable(p), pictures)
     interpreted_lines = [pyc.read_picture(picture) for picture in pictures]
 
     record = interpreted_lines[0]
@@ -61,3 +63,7 @@ def is_a_comment_line(token):
 
 def should_be_skipped(token):
     return first_char_is(token, '|') or is_a_comment_line(token)
+
+def is_a_root_variable(picture):
+    cleaned_picture = picture.strip()
+    return cleaned_picture.startswith('01') or cleaned_picture.startswith('77')

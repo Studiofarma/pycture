@@ -118,30 +118,35 @@ from pycture import picture as pyc
         """
        01  rec-sdati.
       *    any comment
-           05  rec-sdati          pic 9(06).
+           05  sdati-cod-farm     pic 9(06).
         """,
         pyr.Record('rec-sdati', 1,
-            pyc.Picture('rec-sdati', 6, level = 5))
+            pyc.Picture('sdati-cod-farm', 6, level = 5))
     ),
     (
         """
        01  rec-sdati.
-      *    sdati-numero-riga       pic 9(08).
-           05  rec-sdati          pic 9(06).
+debug *    sdati-numero-riga       pic 9(08).
+           05  sdati-cod-farm     pic 9(06).
         """,
         pyr.Record('rec-sdati', 1,
-            pyc.Picture('rec-sdati', 6, level = 5))
+            pyc.Picture('sdati-cod-farm', 6, level = 5))
     ),
-    # (
-    #     """
-    #    01  rec-sdati.
-    #   *     05  sdati-numero-riga       pic 9(08).
-    #   *     05  sdati-filler            pic x(01).
-    #        05  rec-sdati          pic 9(06).
-    #     """,
-    #     pyr.Record('rec-sdati', 1,
-    #         pyc.Picture('rec-sdati', 6, level = 5))
-    # ),
+    (
+        """
+       fd  seddati
+           value of file-id is label-sdati
+           record contains 2048 characters
+      *    Se varia lunghezza rec-sdati (2048) modificare linkage sprc0200
+      *    e dimensione di lks-sdati in sedp0020
+      data record is rec-sdati.
+       01  rec-sdati.
+      *    sdati-numero-riga       pic 9(08).
+           05  sdati-cod-farm     pic 9(06).
+        """,
+        pyr.Record('rec-sdati', 1,
+            pyc.Picture('sdati-cod-farm', 6, level = 5))
+    )
 ])
 def test_can_convert_a_cobol_picture_to_a_python_dictonary(record, expected_result):
     actual_result = pyr.read_record(record)
