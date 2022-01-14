@@ -21,17 +21,23 @@ class Picture:
     def __repr__(self):
         return str(self.__dict__)
 
-def read_picture(picture_string):
+def read_picture(picture_string, ignore_prefix = ''):
     picture_string_tokens = [s.strip() for s in  picture_string.split()]
     level = int(picture_string_tokens[0])
-
+    name = remove_prefix(picture_string_tokens[1], ignore_prefix)
+    
     if len(picture_string_tokens) == 2:
-        return pyr.Record(picture_string_tokens[1], level)
+        return pyr.Record(name, level)
 
     return Picture(
-        picture_string_tokens[1],
-        picture_len(picture_string_tokens[3]),
-        level)
+        name = name,
+        length = picture_len(picture_string_tokens[3]),
+        level = level)
+
+def remove_prefix(text, prefix):
+    if text.startswith(prefix):
+        return text[len(prefix):]
+    return text
 
 def picture_len(picture_definition):
     matches = re.findall(r'v?([\dxz]+)(\(\s*(\d+)\s*\))*', picture_definition)

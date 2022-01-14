@@ -15,10 +15,11 @@ from pycture import record as pyr
             pic 9(03)v9(2)
             usage binary
             """, pyc.Picture('pera', 5, 1)),
-    ('77 banana pic 9(02) usage binary', pyc.Picture('banana', 2))
+    ('77 banana pic 9(02) usage binary', pyc.Picture('banana', 2)),
+    ('77 !PRFX!banana pic 9(02)', pyc.Picture('banana', 2))
 ])
 def test_can_convert_a_cobol_picture_to_a_picture_object(picture, expected_result):
-    actual_result = pyc.read_picture(picture)
+    actual_result = pyc.read_picture(picture, ignore_prefix = '!PRFX!')
     assert actual_result == expected_result
 
 @pytest.mark.parametrize('record, expected_result', [
