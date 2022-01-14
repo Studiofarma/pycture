@@ -18,9 +18,9 @@ class Structure:
 
             current_position += child.size
             new_childred_structures.append(structure)
-        
+
         return self._with_child(self.childred_structures + new_childred_structures)
-            
+
     def _with_child(self, children):
         return Structure(self.name, self.start_at, self.length, *(children))
 
