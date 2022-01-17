@@ -21,13 +21,13 @@ class Structure:
 
         return self._with_child(self.children_structures + new_childred_structures)
 
-    def traverse_leafs(self, f, acc = None):
+    def traverse_leaves(self, f, acc = None):
         if acc is None:
             acc = []
 
         if self.children_structures:
             for child in self.children_structures:
-                acc = child.traverse_leafs(f, acc)
+                acc = child.traverse_leaves(f, acc)
             return acc
         return acc + [f(self)]
 

@@ -26,6 +26,6 @@ from pycture import structure as pys
     ),
 ])
 def test_can_traverse_a_structure(structure, traverse_result):
-    actual_traverse = structure.traverse_leafs(lambda x: (x.name, x.start_at, x.length))
+    actual_traverse = structure.traverse_leaves(lambda x: (x.name, x.start_at, x.length))
 
     assert actual_traverse == traverse_result

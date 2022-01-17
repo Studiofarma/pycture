@@ -44,7 +44,7 @@ class Record:
 
 def read_record(picture_definition):
     pictures = filter(
-        is_not_empty,
+        common.is_not_empty,
         map(clean_comments, picture_definition.split('.')))
     pictures = it.dropwhile(lambda p: not is_a_root_variable(p), pictures)
     interpreted_lines = [pyc.read_picture(picture) for picture in pictures]
@@ -57,13 +57,7 @@ def read_record(picture_definition):
 
 def clean_comments(picture):
     no_comments = [token for token in picture.split('\n') if not should_be_skipped(token)]
-    return str.join('', no_comments)
-
-def is_not_empty(string):
-    return not is_empty(string)
-
-def is_empty(string):
-    return string == '' or all(map(lambda c: c == ' ', string))
+    return ''.join(no_comments)
 
 def first_char_is(string, char):
     return string.strip().startswith(char)
