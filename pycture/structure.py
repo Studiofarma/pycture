@@ -6,7 +6,7 @@ class Structure:
         self.name = name
         self.start_at = start_at
         self.length = length
-        self.childred_structures = list(childred_structures)
+        self.children_structures = list(childred_structures)
 
     def add(self, children):
         current_position = 0
@@ -19,7 +19,17 @@ class Structure:
             current_position += child.size
             new_childred_structures.append(structure)
 
-        return self._with_child(self.childred_structures + new_childred_structures)
+        return self._with_child(self.children_structures + new_childred_structures)
+
+    def traverse_leafs(self, f, acc = None):
+        if acc is None:
+            acc = []
+
+        if self.children_structures:
+            for child in self.children_structures:
+                acc = child.traverse_leafs(f, acc)
+            return acc
+        return acc + [f(self)]
 
     def _with_child(self, children):
         return Structure(self.name, self.start_at, self.length, *(children))
