@@ -32,7 +32,7 @@ def read_picture(picture_string, ignore_prefix = ''):
     picture_string_tokens = [s.strip() for s in  picture_string.split()]
     level = int(picture_string_tokens[0])
     name = remove_prefix(picture_string_tokens[1], ignore_prefix)
-    
+
     if len(picture_string_tokens) == 2:
         return pyr.Record(name, level)
 
@@ -54,10 +54,10 @@ def picture_len(picture_definition):
     return ft.reduce(lambda acc, match: acc + calculate_len(match), matches, 0)
 
 def calculate_len(match):
-    repeted_chars = match[0]
+    repeated_chars = match[0]
     num_in_parenthesis = match[2]
 
-    length = len(repeted_chars)
+    length = len(repeated_chars)
     if num_in_parenthesis != '':
         length += int(num_in_parenthesis) - 1
 
