@@ -2,7 +2,7 @@ import pytest
 from pycture import structure as pys
 from pycture import conversion
 
-@pytest.mark.parametrize('structure, text_record, expected_csv, pruned_branches', [
+@pytest.mark.parametrize('structure, text_record, expected_csv, aggregate_by', [
     (
         pys.Structure('banana', 0, 25,
             pys.Structure('banana.pera', 0, 22,
