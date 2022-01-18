@@ -15,6 +15,7 @@ from pycture import record as pyr
             pic 9(03)v9(2)
             usage binary
             """, pyc.Picture('pera', 5, 1)),
+    ("180717     05  sdati-numero-riga  pic 9(08)", pyc.Picture('sdati-numero-riga', 8, level = 5)),
     ('77 banana pic 9(02) usage binary', pyc.Picture('banana', 2)),
     ('77 !PRFX!banana pic 9(02)', pyc.Picture('banana', 2))
 ])

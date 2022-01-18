@@ -134,6 +134,25 @@ debug *    sdati-numero-riga       pic 9(08).
     ),
     (
         """
+       01  rec-sdati.
+180717     05  sdati-numero-riga  pic 9(08).
+           05  sdati-cod-farm     pic 9(06).
+        """,
+        pyr.Record('rec-sdati', 1,
+            pyc.Picture('sdati-numero-riga', 8, level = 5),
+            pyc.Picture('sdati-cod-farm', 6, level = 5))
+    ),
+    ("""
+       01  rec-sdati.
+debug      05  sdati-numero-riga  pic 9(08).
+           05  sdati-cod-farm     pic 9(06).
+        """,
+        pyr.Record('rec-sdati', 1,
+            pyc.Picture('sdati-numero-riga', 8, level = 5),
+            pyc.Picture('sdati-cod-farm', 6, level = 5))
+    ),
+    (
+        """
        fd  seddati
            value of file-id is label-sdati
            record contains 2048 characters

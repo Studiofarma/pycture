@@ -30,16 +30,23 @@ class Picture:
 
 def read_picture(picture_string, ignore_prefix = ''):
     picture_string_tokens = [s.strip() for s in  picture_string.split()]
-    level = int(picture_string_tokens[0])
-    name = remove_prefix(picture_string_tokens[1], ignore_prefix)
+    start_index = _max_index_of_numeric(picture_string_tokens[:2], 1)
+    level = int(picture_string_tokens[start_index])
+    name = remove_prefix(picture_string_tokens[start_index + 1], ignore_prefix)
 
-    if len(picture_string_tokens) == 2:
+    if len(picture_string_tokens) == 2 + start_index:
         return pyr.Record(name, level)
 
     return Picture(
         name = name,
-        length = picture_len(picture_string_tokens[3]),
+        length = picture_len(picture_string_tokens[start_index + 3]),
         level = level)
+
+def _max_index_of_numeric(tokens, max_index):
+    return min(_max_index_of(tokens, lambda x: x.isnumeric()), max_index)
+
+def _max_index_of(l, filter_fn=lambda x: True):
+    return max(filter(lambda x: filter_fn(x[1]), enumerate(l)), key=lambda x: x[0])[0]
 
 def remove_prefix(text, prefix):
     if text.startswith(prefix):
