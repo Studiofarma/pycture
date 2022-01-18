@@ -44,14 +44,14 @@ class Record:
     def __repr__(self):
         return str(self.__dict__)
 
-def read_record(picture_definition):
+def read_record(picture_definition, ignore_prefix=''):
     picture_definition_without_comments = remove_all_comments_lines(picture_definition)
     
     pictures = filter(
         common.is_not_empty,
         map(clean_comments, picture_definition_without_comments.split('.')))
     pictures = it.dropwhile(lambda p: not is_a_root_variable(p), pictures)
-    interpreted_lines = [pyc.read_picture(picture) for picture in pictures]
+    interpreted_lines = [pyc.read_picture(picture, ignore_prefix) for picture in pictures]
 
     record = interpreted_lines[0]
     for line in interpreted_lines[1:]:

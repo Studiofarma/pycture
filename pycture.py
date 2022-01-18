@@ -5,17 +5,12 @@ from tqdm import tqdm
 from pycture import conversion
 from pycture import record as pyr
 
-def read_record(definition_filename):
-    definition_file_text = read_file(definition_filename)
-    record = pyr.read_record(definition_file_text)
-    return record.structure
-
 def main(args):
     data_filename = args.data_filename
     definition_filename = args.definition_filename
-    output_filename = args.output if args.output is not None else "out.csv"
+    output_filename = args.output
 
-    record_structure = read_record(definition_filename)
+    record_structure = read_record(definition_filename, args.prefix)
 
     if args.verbose or args.print_definition:
         pretty_print(record_structure)
@@ -36,6 +31,11 @@ def main(args):
                 row_listner_fn = update_bar)
 
             write_to_output(output_filename, csv_text_iterator)
+
+def read_record(definition_filename, prefix):
+    definition_file_text = read_file(definition_filename)
+    record = pyr.read_record(definition_file_text, prefix)
+    return record.structure
 
 def pretty_print(record_obj):
     import json
@@ -65,7 +65,7 @@ if __name__ == "__main__":
         'definition_filename', nargs='?',
         help='the filename of COBOL picture definition that describes the data')
     parser.add_argument(
-        '-o', '--output',  nargs='?',
+        '-o', '--output',  nargs='?', const='out.csv',
         help='the filename to give to the output file')
     parser.add_argument(
         '-v', '--verbose',  action='store_true',
@@ -76,6 +76,9 @@ if __name__ == "__main__":
     parser.add_argument(
         '-p', '--print-definition',  action='store_true',
         help='display the json of the parsed Cobol picture')
+    parser.add_argument(
+        '--prefix',  nargs='?', const='',
+        help='remove a prefix from the name of Cobol variables')
     args = parser.parse_args()
 
     try:

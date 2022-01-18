@@ -42,6 +42,7 @@ def converto_to_csv(
         aggregate_by,
         separator,
         row_listner_fn)
+    
     return f'{new_line.join(csv_lines_iterator)}{new_line}'
 
 def convert_iterator_to_csv(
