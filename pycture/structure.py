@@ -8,13 +8,12 @@ class Structure:
         self.length = length
         self.children_structures = list(childred_structures)
 
-    def add(self, children):
-        current_position = 0
+    def add(self, children, current_position = 0):
         new_childred_structures = []
         for child in children:
             structure = Structure(f'{self.name}.{child.name}', current_position, child.size)
             if isinstance(child, pyr.Record):
-                structure = structure.add(child.children)
+                structure = structure.add(child.children, current_position)
 
             current_position += child.size
             new_childred_structures.append(structure)

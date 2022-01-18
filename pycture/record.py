@@ -46,7 +46,7 @@ class Record:
 
 def read_record(picture_definition, ignore_prefix=''):
     picture_definition_without_comments = remove_all_comments_lines(picture_definition)
-    
+
     pictures = filter(
         common.is_not_empty,
         map(clean_comments, picture_definition_without_comments.split('.')))

@@ -33,9 +33,25 @@ from pycture import structure as pys
             pys.Structure('banana.pera', 0, 22,
                 pys.Structure('banana.pera.seed', start_at = 0, length = 2),
                 pys.Structure('banana.pera.fruit', start_at = 2, length = 20),
-                ),
+        ),
             pys.Structure('banana.mela', start_at = 22, length = 3)
-            )
+        )
+    ),
+    (
+        pyr.Record('banana', 1,
+            pyc.Picture('mela', length = 3, level = 2),
+            pyr.Record('pera', 2,
+                pyc.Picture('seed', length = 2, level = 3),
+                pyc.Picture('fruit', length = 20, level = 3)
+            ),
+        ),
+        pys.Structure('banana', 0, 25,
+            pys.Structure('banana.mela', start_at = 0, length = 3),
+            pys.Structure('banana.pera', 3, 22,
+                pys.Structure('banana.pera.seed', start_at = 3, length = 2),
+                pys.Structure('banana.pera.fruit', start_at = 5, length = 20),
+            ),
+        )
     ),
 ])
 def test_can_provide_the_structure_of_a_record(record, expected_result):
