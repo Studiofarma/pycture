@@ -5,16 +5,22 @@ from tqdm import tqdm
 from pycture import conversion
 from pycture import record as pyr
 
+def read_record(definition_filename):
+    definition_file_text = read_file(definition_filename)
+    record = pyr.read_record(definition_file_text)
+    return record.structure
+
 def main(args):
     data_filename = args.data_filename
     definition_filename = args.definition_filename
     output_filename = args.output if args.output is not None else "out.csv"
 
-    definition_file_text = read_file(definition_filename)
-    record = pyr.read_record(definition_file_text)
-    record_structure = record.structure
-    if args.verbose:
-        print(record_structure)
+    record_structure = read_record(definition_filename)
+
+    if args.verbose or args.print_definition:
+        pretty_print(record_structure)
+        if args.print_definition:
+            exit(0)
 
     with open(data_filename, 'r', encoding='utf-8') as datafile_iterator:
         data_lines = count_file_lines(data_filename)
@@ -25,11 +31,17 @@ def main(args):
                 return line_out
 
             csv_text_iterator = conversion.convert_iterator_to_csv(
-                record_structure, 
+                record_structure,
                 datafile_iterator,
                 row_listner_fn = update_bar)
 
             write_to_output(output_filename, csv_text_iterator)
+
+def pretty_print(record_obj):
+    import json
+    record_dict = json.loads(str(record_obj).replace('\'', "\""))
+    json_obj = json.dumps(record_dict, indent=4)
+    print(json_obj)
 
 def read_file(filename):
     with open(filename, 'r', encoding='utf-8') as f:
@@ -61,11 +73,15 @@ if __name__ == "__main__":
     parser.add_argument(
         '-d', '--debug',  action='store_true',
         help='display some debug informations, like exception stacktrace')
+    parser.add_argument(
+        '-p', '--print-definition',  action='store_true',
+        help='display the json of the parsed Cobol picture')
     args = parser.parse_args()
 
     try:
         main(args)
     except Exception as e:
         print(e)
-        parser.print_help()        
-        raise e
+        parser.print_help()
+        if args.debug:
+            raise e
