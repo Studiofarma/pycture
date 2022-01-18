@@ -4,6 +4,8 @@ from pycture import picture as pyc
 from pycture import structure as pys
 from pycture import common
 
+NEW_LINE = '\n'
+
 class Record:
     def __init__(self, name, level, *children):
         self.name = name
@@ -43,9 +45,11 @@ class Record:
         return str(self.__dict__)
 
 def read_record(picture_definition):
+    picture_definition_without_comments = remove_all_comments_lines(picture_definition)
+    
     pictures = filter(
         common.is_not_empty,
-        map(clean_comments, picture_definition.split('.')))
+        map(clean_comments, picture_definition_without_comments.split('.')))
     pictures = it.dropwhile(lambda p: not is_a_root_variable(p), pictures)
     interpreted_lines = [pyc.read_picture(picture) for picture in pictures]
 
@@ -55,8 +59,12 @@ def read_record(picture_definition):
 
     return record
 
+def remove_all_comments_lines(picture_definition):
+    return NEW_LINE.join(
+        [p for p in picture_definition.split(NEW_LINE) if not is_a_comment_line(p)])
+
 def clean_comments(picture):
-    no_comments = [token for token in picture.split('\n') if not should_be_skipped(token)]
+    no_comments = [token for token in picture.split(NEW_LINE) if not should_be_skipped(token)]
     return ''.join(no_comments)
 
 def first_char_is(string, char):
@@ -66,7 +74,7 @@ def is_a_comment_line(token):
     return len(token) >= 7 and token[6] == '*'
 
 def should_be_skipped(token):
-    return first_char_is(token, '|') or is_a_comment_line(token)
+    return first_char_is(token, '|')
 
 def is_a_root_variable(picture):
     cleaned_picture = picture.strip()

@@ -139,13 +139,30 @@ debug *    sdati-numero-riga       pic 9(08).
            record contains 2048 characters
       *    Se varia lunghezza rec-sdati (2048) modificare linkage sprc0200
       *    e dimensione di lks-sdati in sedp0020
-      data record is rec-sdati.
+           data record is rec-sdati.
        01  rec-sdati.
       *    sdati-numero-riga       pic 9(08).
            05  sdati-cod-farm     pic 9(06).
         """,
         pyr.Record('rec-sdati', 1,
             pyc.Picture('sdati-cod-farm', 6, level = 5))
+    ),
+    (
+        """
+      *-----------------------------------------------------------------*
+      *    bla blabla bla                                               *
+      *-----------------------------------------------------------------*
+      *    ssssss kajaskjh dlòkjasDLAKJS DòAKJDAòKLDJ ASLDKJ AS         *
+      *    SDADASADS ASDADa. lkòlkad jalkj àaòsj lkjdaoroiqqpoas        *
+      *-----------------------------------------------------------------*
+       01  xx.
+           05 xx-key                           pic  9(18).
+           05 xx-cod                           pic  x(06).
+        """,
+        pyr.Record('xx', 1,
+            pyc.Picture('xx-key', 18, level = 5),
+            pyc.Picture('xx-cod', 6, level = 5)
+        )
     )
 ])
 def test_can_read_a_cobol_record(record, expected_result):
