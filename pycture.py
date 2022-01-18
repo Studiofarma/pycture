@@ -9,6 +9,9 @@ def main(args):
     definition_filename = args.definition_filename
     output_filename = args.output if args.output is not None else "out.csv"
 
+    definition_file_text = read_file(definition_filename)
+    definition_file_text = read_file(definition_filename)
+
     data_lines = count_file_lines(data_filename)
     with tqdm(total=data_lines) as progress_bar:
         def update_bar(i, _, line_out):
@@ -22,6 +25,10 @@ def main(args):
             row_listner_fn = update_bar)
         
         write_to_output(output_filename, csv_text)
+
+def read_file(filename):
+    with open(filename, 'r', encoding='utf-8') as f:
+        return f.read()
 
 def write_to_output(output_filename, csv_text):
     with open(output_filename, 'w', encoding='utf-8') as output_file:

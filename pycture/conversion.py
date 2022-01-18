@@ -1,3 +1,4 @@
+import itertools
 from pycture import common
 from pycture import record as pyr
 
@@ -41,6 +42,22 @@ def converto_to_csv(
 
     return f'{headers}{new_line}{new_line.join(lines)}{new_line}'
 
+def convert_iterator_to_csv(
+    structure,
+    text_record_iterator,
+    aggregate_by = [],
+    separator=';',
+    row_listner_fn = _row_identity):
+    column_definitions = structure.traverse_leaves(pruned_branches=aggregate_by)
+    headers = separator.join([x.name for x in column_definitions])
+
+    lines_iterator = map(
+        lambda iline: _split_by_column_length(iline[0], iline[1], column_definitions, separator, row_listner_fn),
+        filter(
+            lambda iline: common.is_not_empty(iline[1]),
+            enumerate(text_record_iterator)))
+
+    return itertools.chain([headers], lines_iterator)
 
 def _split_by_column_length(
     i,
