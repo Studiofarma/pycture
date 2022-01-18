@@ -28,6 +28,7 @@ def main(args):
             csv_text_iterator = conversion.convert_iterator_to_csv(
                 record_structure,
                 datafile_iterator,
+                aggregate_by=args.aggregate_by,
                 row_listner_fn = update_bar)
 
             write_to_output(output_filename, csv_text_iterator)
@@ -79,6 +80,9 @@ if __name__ == "__main__":
     parser.add_argument(
         '--prefix',  nargs='?', type=str, const='', default='',
         help='remove a prefix from the name of Cobol variables')
+    parser.add_argument(
+        '--aggregate-by',  nargs='+', default=[],
+        help='variables names used to aggregate')
     args = parser.parse_args()
 
     try:
