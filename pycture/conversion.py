@@ -1,7 +1,16 @@
 from pycture import common
 from pycture import record as pyr
 
-def converto_file_to_csv(definition_filename, text_record_filename, aggregate_by = [], separator=';', new_line = '\n'):
+def _row_identity(i, input_line, output_line):
+    return output_line
+
+def converto_file_to_csv(
+    definition_filename,
+    text_record_filename,
+    aggregate_by = [],
+    separator=';',
+    new_line = '\n',
+    row_listner_fn = _row_identity):
     with open(definition_filename, 'r', encoding='utf-8') as definition_file:
         definition_file_text = definition_file.read()
         record = pyr.read_record(definition_file_text)
@@ -9,24 +18,37 @@ def converto_file_to_csv(definition_filename, text_record_filename, aggregate_by
             text_record = record_file.read()
 
             record_structure = record.structure
-            return converto_to_csv(record_structure, text_record, aggregate_by, separator, new_line)
+            return converto_to_csv(
+                record_structure,
+                text_record,
+                aggregate_by,
+                separator,
+                new_line,
+                row_listner_fn)
 
-def converto_to_csv(structure, text_record, aggregate_by = [], separator=';', new_line = '\n'):
+def converto_to_csv(
+    structure,
+    text_record,
+    aggregate_by = [],
+    separator=';',
+    new_line = '\n',
+    row_listner_fn = _row_identity):
     column_definitions = structure.traverse_leaves(pruned_branches=aggregate_by)
     headers = separator.join([x.name for x in column_definitions])
-    lines = [_split_by_column_length(line, column_definitions, separator)
-             for line in text_record.splitlines()
+    lines = [_split_by_column_length(i, line, column_definitions, separator, row_listner_fn)
+             for i, line in enumerate(text_record.splitlines())
              if common.is_not_empty(line)]
 
     return f'{headers}{new_line}{new_line.join(lines)}{new_line}'
 
 
 def _split_by_column_length(
+    i,
     line,
     column_definitions,
     separator,
-    row_listner_fn = lambda input_line, output_line: output_line):
+    row_listner_fn):
     columns_text = [line[column.start_at:column.length + column.start_at]
                     for column in column_definitions]
     csv_row = separator.join(columns_text)
-    return row_listner_fn(line, csv_row)
+    return row_listner_fn(i, line, csv_row)

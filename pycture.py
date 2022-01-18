@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-from tqdm import trange
-from time import sleep
+from tqdm import tqdm
 from pycture import conversion
 
 def main(args):
@@ -10,10 +9,27 @@ def main(args):
     definition_filename = args.definition_filename
     output_filename = args.output if args.output is not None else "out.csv"
 
-    csv_text = conversion.converto_file_to_csv(definition_filename, data_filename)
+    data_lines = count_file_lines(data_filename)
+    with tqdm(total=data_lines) as progress_bar:
+        def update_bar(i, _, line_out):
+            progress_bar.set_description(f'Processed line {i}')
+            progress_bar.update()
+            return line_out
+        
+        csv_text = conversion.converto_file_to_csv(
+            definition_filename,
+            data_filename,
+            row_listner_fn = update_bar)
+        
+        write_to_output(output_filename, csv_text)
 
+def write_to_output(output_filename, csv_text):
     with open(output_filename, 'w', encoding='utf-8') as output_file:
         output_file.write(csv_text)
+
+def count_file_lines(filename):
+    with open(filename, 'r', encoding='utf-8') as f:
+        return len(list(f))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
