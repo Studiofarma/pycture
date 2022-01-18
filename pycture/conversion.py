@@ -1,7 +1,7 @@
 from pycture import common
 
-def converto_to_csv(structure, text_record, separator=';', new_line = '\n'):
-    column_definitions = structure.traverse_leaves()
+def converto_to_csv(structure, text_record, aggregate_by = [], separator=';', new_line = '\n'):
+    column_definitions = structure.traverse_leaves(pruned_branches=aggregate_by)
     headers = separator.join([x.name for x in column_definitions])
     lines = [_split_by_column_length(line, column_definitions, separator)
              for line in text_record.splitlines()
