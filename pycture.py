@@ -49,7 +49,7 @@ def read_file(filename):
 
 def write_to_output(output_filename, csv_text_iterator):
     with open(output_filename, 'w', encoding='utf-8') as output_file:
-        output_file.writelines(csv_text_iterator)
+        output_file.writelines(f'{l}\n' for l in csv_text_iterator)
 
 def count_file_lines(filename):
     with open(filename, 'r', encoding='utf-8') as f:

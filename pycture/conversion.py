@@ -42,7 +42,7 @@ def converto_to_csv(
         aggregate_by,
         separator,
         row_listner_fn)
-    
+
     return f'{new_line.join(csv_lines_iterator)}{new_line}'
 
 def convert_iterator_to_csv(
@@ -71,4 +71,5 @@ def _split_by_column_length(
     columns_text = [line[column.start_at:column.length + column.start_at]
                     for column in column_definitions]
     csv_row = separator.join(columns_text)
+    csv_row = csv_row.replace('\n', ' ')
     return row_listner_fn(i, line, csv_row)
