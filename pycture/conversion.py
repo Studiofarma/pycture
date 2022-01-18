@@ -34,13 +34,15 @@ def converto_to_csv(
     separator=';',
     new_line = '\n',
     row_listner_fn = _row_identity):
-    column_definitions = structure.traverse_leaves(pruned_branches=aggregate_by)
-    headers = separator.join([x.name for x in column_definitions])
-    lines = [_split_by_column_length(i, line, column_definitions, separator, row_listner_fn)
-             for i, line in enumerate(text_record.splitlines())
-             if common.is_not_empty(line)]
 
-    return f'{headers}{new_line}{new_line.join(lines)}{new_line}'
+    text_record_iterator = (record for record in text_record.splitlines())
+    csv_lines_iterator = convert_iterator_to_csv(
+        structure,
+        text_record_iterator,
+        aggregate_by,
+        separator,
+        row_listner_fn)
+    return f'{new_line.join(csv_lines_iterator)}{new_line}'
 
 def convert_iterator_to_csv(
     structure,
