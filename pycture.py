@@ -11,14 +11,12 @@ def main(args):
     output_filename = args.output if args.output is not None else "out.csv"
 
     definition_file_text = read_file(definition_filename)
+    record = pyr.read_record(definition_file_text)
+    record_structure = record.structure
+    if args.verbose:
+        print(record_structure)
 
     with open(data_filename, 'r', encoding='utf-8') as datafile_iterator:
-        record = pyr.read_record(definition_file_text)
-        record_structure = record.structure
-
-        if args.verbose:
-            print(record_structure)
-
         data_lines = count_file_lines(data_filename)
         with tqdm(total=data_lines) as progress_bar:
             def update_bar(i, _, line_out):
@@ -47,7 +45,7 @@ def count_file_lines(filename):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-            description='Convert a serialized Cobol data file into CSV, given the Cobol definition file.')
+        description='Convert a serialized Cobol data file into CSV, given the Cobol definition file.')
     parser.add_argument(
         'data_filename', nargs='?',
         help='the filename of the data export in the COBOL format')
@@ -60,10 +58,14 @@ if __name__ == "__main__":
     parser.add_argument(
         '-v', '--verbose',  action='store_true',
         help='display more parsing informations, like the interpreted Cobol picture')
+    parser.add_argument(
+        '-d', '--debug',  action='store_true',
+        help='display some debug informations, like exception stacktrace')
     args = parser.parse_args()
 
     try:
         main(args)
     except Exception as e:
         print(e)
-        parser.print_help()
+        parser.print_help()        
+        raise e
