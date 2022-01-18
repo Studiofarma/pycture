@@ -21,15 +21,15 @@ class Structure:
 
         return self._with_child(self.children_structures + new_childred_structures)
 
-    def traverse_leaves(self, f, acc = None):
+    def traverse_leaves(self, fn = lambda x: x, acc = None):
         if acc is None:
             acc = []
 
         if self.children_structures:
             for child in self.children_structures:
-                acc = child.traverse_leaves(f, acc)
+                acc = child.traverse_leaves(fn, acc)
             return acc
-        return acc + [f(self)]
+        return acc + [fn(self)]
 
     def _with_child(self, children):
         return Structure(self.name, self.start_at, self.length, *(children))

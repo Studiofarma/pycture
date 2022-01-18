@@ -1,8 +1,6 @@
 import pytest
-from pycture import record as pyr
-from pycture import picture as pyc
 from pycture import structure as pys
-from pycture import common
+from pycture import conversion
 
 @pytest.mark.parametrize('structure, text_record, expected_csv', [
     (
@@ -23,17 +21,5 @@ from pycture import common
     ),
 ])
 def test_can_provide_the_structure_of_a_record(structure, text_record, expected_csv):
-    actual_result = converto_to_csv(structure, text_record)
+    actual_result = conversion.converto_to_csv(structure, text_record)
     assert actual_result == expected_csv
-
-def converto_to_csv(structure, text_record, separator=';'):
-    def split_to_csv(line, column_definitions):
-        columns_text = [line[column.start_at:column.length + column.start_at] for column in column_definitions]
-        return separator.join(columns_text)
-
-    structure_list = structure.traverse_leaves(lambda x: x)
-    headers = separator.join([x.name for x in structure_list])
-    lines = [split_to_csv(line, structure_list) for line in text_record.splitlines() if common.is_not_empty(line)]
-
-    new_line = '\n'
-    return f'{headers}{new_line}{new_line.join(lines)}{new_line}'
