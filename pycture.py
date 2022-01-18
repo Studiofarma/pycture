@@ -21,7 +21,7 @@ def main(args):
         data_lines = count_file_lines(data_filename)
         with tqdm(total=data_lines) as progress_bar:
             def update_bar(i, _, line_out):
-                progress_bar.set_description(f'Processed line {i}')
+                progress_bar.set_description(f'Processed lines {i}')
                 progress_bar.update()
                 return line_out
 
@@ -47,9 +47,9 @@ def read_file(filename):
     with open(filename, 'r', encoding='utf-8') as f:
         return f.read()
 
-def write_to_output(output_filename, csv_text):
+def write_to_output(output_filename, csv_text_iterator):
     with open(output_filename, 'w', encoding='utf-8') as output_file:
-        output_file.write(csv_text)
+        output_file.writelines(csv_text_iterator)
 
 def count_file_lines(filename):
     with open(filename, 'r', encoding='utf-8') as f:
@@ -65,7 +65,7 @@ if __name__ == "__main__":
         'definition_filename', nargs='?',
         help='the filename of COBOL picture definition that describes the data')
     parser.add_argument(
-        '-o', '--output',  nargs='?', const='out.csv',
+        '-o', '--output',  nargs='?', type=str, const='out.csv', default='out.csv',
         help='the filename to give to the output file')
     parser.add_argument(
         '-v', '--verbose',  action='store_true',
@@ -77,7 +77,7 @@ if __name__ == "__main__":
         '-p', '--print-definition',  action='store_true',
         help='display the json of the parsed Cobol picture')
     parser.add_argument(
-        '--prefix',  nargs='?', const='',
+        '--prefix',  nargs='?', type=str, const='', default='',
         help='remove a prefix from the name of Cobol variables')
     args = parser.parse_args()
 
