@@ -28,19 +28,36 @@ class Picture:
     def __repr__(self):
         return str(self.__dict__)
 
+class RedefinesPicture():
+    def __init__(self, picture):
+        self.picture = picture
+
 def read_picture(picture_string, ignore_prefix = ''):
     picture_string_tokens = [s.strip() for s in  picture_string.split()]
     start_index = _max_index_of_numeric(picture_string_tokens[:2], 1)
     level = int(picture_string_tokens[start_index])
-    name = remove_prefix(picture_string_tokens[start_index + 1], ignore_prefix)
+    name_index = start_index + 1
+    name = remove_prefix(picture_string_tokens[name_index], ignore_prefix)
 
     if len(picture_string_tokens) == 2 + start_index:
-        return pyr.Record(name, level)
+        my_return = pyr.Record(name, level)
+    else:        
+        my_return = Picture(
+            name = name,
+            length = picture_len(picture_string_tokens[start_index + 3]),
+            level = level)
 
-    return Picture(
-        name = name,
-        length = picture_len(picture_string_tokens[start_index + 3]),
-        level = level)
+    if _is_redefines(picture_string_tokens, name_index):
+        my_return = RedefinesPicture(my_return)
+
+    return my_return
+
+def _is_redefines(picture_string_tokens, name_index):
+    redefines_index = name_index + 1
+    if len(picture_string_tokens) > redefines_index:
+        return picture_string_tokens[redefines_index] == 'redefines'
+    else:
+        return False
 
 def _max_index_of_numeric(tokens, max_index):
     return min(_max_index_of(tokens, lambda x: x.isnumeric()), max_index)

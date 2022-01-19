@@ -13,18 +13,15 @@ class Record:
         self.children = list(children)
 
     def add(self, child):
-        def last_children():
-            return self.children[-1]
+        if not self.children or self.last_children().level == child.level:
+            return self.with_child(self.children + [child])
 
-        if not self.children or \
-            isinstance(last_children(), pyc.Picture) or \
-            last_children().level == child.level:
+        return self.with_child(self.children[:-1] + [self.last_children().add(child)])
 
-            return self._with_child(self.children + [child])
-        else:
-            return self._with_child(self.children[:-1] + [last_children().add(child)])
+    def last_children(self):
+        return self.children[-1]
 
-    def _with_child(self, children):
+    def with_child(self, children):
         return Record(self.name, self.level, *(children))
 
     @cached_property
@@ -34,6 +31,20 @@ class Record:
     @cached_property
     def structure(self):
         return pys.read_structure(self)
+
+    def __eq__(self, other):
+        return common.eq(self, other)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __repr__(self):
+        return str(self.__dict__)
+
+class Redefines:
+    def __init__(self, picture, *redefinitions):
+        self.picture = picture
+        self.redefinitions = redefinitions
 
     def __eq__(self, other):
         return common.eq(self, other)
