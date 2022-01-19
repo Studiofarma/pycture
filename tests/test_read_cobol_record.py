@@ -242,6 +242,48 @@ def test_can_read_a_cobol_record(record, expected_result):
             pyc.Picture('yy', 2, 2)
         )
     ),
+    (
+        """01 banana.
+                02 pera.
+                    03 pera-1 pic 9.
+                    03 pera-2 pic x.
+                02 xx redefines pera.
+                    03 xx-1 pic x.
+                    03 xx-2 pic 9.
+                02 yy redefines pera.
+                    03 yy-1 pic x.
+                    03 yy-2 pic x.
+                02 zz pic 99.
+        """,
+        pyr.Record('banana', 1,
+            pyr.Redefines(
+                pyr.Record('pera', 2, pyc.Picture('pera-1', 1, 3), pyc.Picture('pera-2', 1, 3)),
+                pyr.Record('xx', 2, pyc.Picture('xx-1', 1, 3), pyc.Picture('xx-2', 1, 3)),
+                pyr.Record('yy', 2, pyc.Picture('yy-1', 1, 3), pyc.Picture('yy-2', 1, 3))
+            ),
+            pyc.Picture('zz', 2, 2)
+        ),
+    ),
+    (
+        """01 banana.
+                02 pera.
+                    03 pera-1 pic 9.
+                    03 pera-2 pic x.
+                02 xx redefines pera pic 99.
+                02 yy redefines pera.
+                    03 yy-1 pic x.
+                    03 yy-2 pic x.
+                02 zz pic 99.
+        """,
+        pyr.Record('banana', 1,
+            pyr.Redefines(
+                pyr.Record('pera', 2, pyc.Picture('pera-1', 1, 3), pyc.Picture('pera-2', 1, 3)),
+                pyc.Picture('xx', 2, level = 2),
+                pyr.Record('yy', 2, pyc.Picture('yy-1', 1, 3), pyc.Picture('yy-2', 1, 3))
+            ),
+            pyc.Picture('zz', 2, 2)
+        )
+    ),
 ])
 def test_can_read_a_cobol_record_with_redefines(record, expected_result):
     actual_result = pyr.read_record(record)

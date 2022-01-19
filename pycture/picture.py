@@ -33,13 +33,18 @@ class Picture:
     def __repr__(self):
         return str(self.__dict__)
 
-class RedefinesPicture():
+class RedefinesFactory():
     def __init__(self, picture):
         self.picture = picture
         self.level = picture.level
 
     def add_to(self, record):
-        redefines = pyr.Redefines(record.last_children(), self.picture)
+        last_children = record.last_children()
+        if isinstance(last_children, pyr.Redefines):
+            redefines = last_children.add_redefinition(self.picture)
+        else:
+            redefines = pyr.Redefines(last_children, self.picture)
+
         return record.with_last_children(redefines)
 
 def read_picture(picture_string, ignore_prefix = ''):
@@ -61,7 +66,7 @@ def read_picture(picture_string, ignore_prefix = ''):
             level = level)
 
     if is_redefines:
-        my_return = RedefinesPicture(my_return)
+        my_return = RedefinesFactory(my_return)
 
     return my_return
 

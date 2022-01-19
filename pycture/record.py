@@ -56,12 +56,17 @@ class Redefines:
         self.level = picture.level
         self.redefinitions = list(redefinitions)
 
-    def add(self, child):
-        return self.with_last_redefinition(self.last_redefinition().add(child))
+    def add(self, element):
+        if element.level == self.level:
+            return self.add_redefinition(element)
+        return self.with_last_redefinition(self.last_redefinition().add(element))
 
     def with_last_redefinition(self, redefinition):
         return self.with_redefinitions(self.redefinitions[:-1] + [redefinition])
 
+    def add_redefinition(self, redefinition):
+        return self.with_redefinitions(self.redefinitions + [redefinition])
+    
     def with_redefinitions(self, redefinitions):
         return Redefines(self.picture, *(redefinitions))
 
