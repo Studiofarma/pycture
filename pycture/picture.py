@@ -36,10 +36,7 @@ class Picture:
 class RedefinesPicture():
     def __init__(self, picture):
         self.picture = picture
-        
-    @property
-    def level(self):
-        return self.picture.level
+        self.level = picture.level
 
     def add_to(self, record):
         redefines = pyr.Redefines(record.last_children(), self.picture)

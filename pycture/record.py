@@ -53,8 +53,21 @@ class Record:
 class Redefines:
     def __init__(self, picture, *redefinitions):
         self.picture = picture
-        self.redefinitions = redefinitions
+        self.level = picture.level
+        self.redefinitions = list(redefinitions)
 
+    def add(self, child):
+        return self.with_last_redefinition(self.last_redefinition().add(child))
+
+    def with_last_redefinition(self, redefinition):
+        return self.with_redefinitions(self.redefinitions[:-1] + [redefinition])
+
+    def with_redefinitions(self, redefinitions):
+        return Redefines(self.picture, *(redefinitions))
+
+    def last_redefinition(self):
+        return self.redefinitions[-1]
+        
     def __eq__(self, other):
         return common.eq(self, other)
 
