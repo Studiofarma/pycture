@@ -188,21 +188,21 @@ def test_can_read_a_cobol_record(record, expected_result):
     actual_result = pyr.read_record(record)
     assert actual_result == expected_result
 
-# @pytest.mark.parametrize('record, expected_result', [
-#     (
-#         """01 banana.
-#                 02 pera pic 9(2).
-#                 02 pera-red redefines pera pic x(2).
-#         """,
-#         pyr.Record('banana', 1,
-#             pyr.Redefines(
-#                 pyc.Picture('pera', 2, 2),
-#                 pyc.Picture('pera-red', 2, 2)))
-#     )
-# ])
-# def test_can_read_a_cobol_record_with_redefines(record, expected_result):
-#     actual_result = pyr.read_record(record)
-#     assert actual_result == expected_result
+@pytest.mark.parametrize('record, expected_result', [
+    (
+        """01 banana.
+                02 pera pic 9(2).
+                02 pera-red redefines pera pic x(2).
+        """,
+        pyr.Record('banana', 1,
+            pyr.Redefines(
+                pyc.Picture('pera', 2, 2),
+                pyc.Picture('pera-red', 2, 2)))
+    )
+])
+def test_can_read_a_cobol_record_with_redefines(record, expected_result):
+    actual_result = pyr.read_record(record)
+    assert actual_result == expected_result
 
 @pytest.mark.parametrize('record, expected_result', [
     (pyr.Record('banana', 1, pyc.Picture('pera', 2, 2)), 2),

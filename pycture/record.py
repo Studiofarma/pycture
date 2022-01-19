@@ -14,9 +14,18 @@ class Record:
 
     def add(self, child):
         if not self.children or self.last_children().level == child.level:
-            return self.with_child(self.children + [child])
+            return child.add_to(self)
 
-        return self.with_child(self.children[:-1] + [self.last_children().add(child)])
+        return self.with_last_children(self.last_children().add(child))
+
+    def with_last_children(self, child):
+        return self.with_child(self.children[:-1] + [child])
+
+    def add_to(self, record):
+        return record.add_child(self)
+
+    def add_child(self, child):
+        return self.with_child(self.children + [child])
 
     def last_children(self):
         return self.children[-1]

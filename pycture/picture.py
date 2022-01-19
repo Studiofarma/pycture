@@ -5,6 +5,8 @@ from pycture import common
 from pycture import record as pyr
 from pycture import structure as pys
 
+REDEFINES_CONST = 'redefines'
+
 class Picture:
     def __init__(self, name, length, level = 77):
         self.level = level
@@ -19,6 +21,9 @@ class Picture:
     def structure(self):
         return pys.read_structure(self)
 
+    def add_to(self, record):
+        return record.add_child(self)
+
     def __eq__(self, other):
         return common.eq(self, other)
 
@@ -31,31 +36,46 @@ class Picture:
 class RedefinesPicture():
     def __init__(self, picture):
         self.picture = picture
+        
+    @property
+    def level(self):
+        return self.picture.level
+
+    def add_to(self, record):
+        redefines = pyr.Redefines(record.last_children(), self.picture)
+        return record.with_last_children(redefines)
 
 def read_picture(picture_string, ignore_prefix = ''):
-    picture_string_tokens = [s.strip() for s in  picture_string.split()]
+    picture_string_tokens = [s.strip() for s in picture_string.split()]
     start_index = _max_index_of_numeric(picture_string_tokens[:2], 1)
     level = int(picture_string_tokens[start_index])
     name_index = start_index + 1
     name = remove_prefix(picture_string_tokens[name_index], ignore_prefix)
 
+    is_redefines = _is_redefines(picture_string_tokens, name_index)
+    picture_string_tokens = _remove_redefines_keywords(picture_string_tokens, name, is_redefines)
+
     if len(picture_string_tokens) == 2 + start_index:
         my_return = pyr.Record(name, level)
-    else:        
+    else:
         my_return = Picture(
             name = name,
             length = picture_len(picture_string_tokens[start_index + 3]),
             level = level)
 
-    if _is_redefines(picture_string_tokens, name_index):
+    if is_redefines:
         my_return = RedefinesPicture(my_return)
 
     return my_return
 
+def _remove_redefines_keywords(picture_string_tokens, name, is_redefines):
+    return [t for t in picture_string_tokens 
+            if t not in (REDEFINES_CONST, name) or not is_redefines]
+
 def _is_redefines(picture_string_tokens, name_index):
     redefines_index = name_index + 1
     if len(picture_string_tokens) > redefines_index:
-        return picture_string_tokens[redefines_index] == 'redefines'
+        return picture_string_tokens[redefines_index] == REDEFINES_CONST
     else:
         return False
 
