@@ -54,6 +54,7 @@ class Redefines:
     def __init__(self, picture, *redefinitions):
         self.picture = picture
         self.level = picture.level
+        self.size = picture.size
         self.redefinitions = list(redefinitions)
 
     def add(self, element):
