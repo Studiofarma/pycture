@@ -51,11 +51,18 @@ class Record:
         return str(self.__dict__)
 
 class Redefines:
-    def __init__(self, picture, *redefinitions):
-        self.picture = picture
-        self.level = picture.level
-        self.size = picture.size
+    def __init__(self, original_definition, *redefinitions):
+        self.original_definition = original_definition
+        self.level = original_definition.level
+        self.size = original_definition.size
         self.redefinitions = list(redefinitions)
+
+    @property
+    def name(self):
+        return self.original_definition.name
+
+    def choosen_definition(self):
+        return self.original_definition
 
     def add(self, element):
         if element.level == self.level:
@@ -69,7 +76,7 @@ class Redefines:
         return self.with_redefinitions(self.redefinitions + [redefinition])
     
     def with_redefinitions(self, redefinitions):
-        return Redefines(self.picture, *(redefinitions))
+        return Redefines(self.original_definition, *(redefinitions))
 
     def last_redefinition(self):
         return self.redefinitions[-1]

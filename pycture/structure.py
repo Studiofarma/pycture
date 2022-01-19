@@ -14,6 +14,10 @@ class Structure:
             structure = Structure(f'{self.name}.{child.name}', current_position, child.size)
             if isinstance(child, pyr.Record):
                 structure = structure.add(child.children, current_position)
+            elif isinstance(child, pyr.Redefines):
+                choosen_definition = child.choosen_definition()
+                if isinstance(choosen_definition, pyr.Record):
+                    structure = structure.add(choosen_definition.children, current_position)
 
             current_position += child.size
             new_childred_structures.append(structure)
