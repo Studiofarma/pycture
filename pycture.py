@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
 import argparse
+import os
+import fnmatch
 from tqdm import tqdm
 from pycture import conversion
 from pycture import record as pyr
@@ -32,6 +34,16 @@ def main(args):
                 row_listner_fn = update_bar)
 
             write_to_output(output_filename, csv_text_iterator)
+
+def file_list(path):
+    dir_name = os.path.dirname(path)
+    pattern = os.path.basename(path)
+    out_file_list = []
+    for root, _, files in os.walk(dir_name):
+        for filename in fnmatch.filter(files, pattern):
+            out_file_list.append(os.path.join(root, filename))
+
+    return out_file_list
 
 def read_record(definition_filename, prefix):
     definition_file_text = read_file(definition_filename)
