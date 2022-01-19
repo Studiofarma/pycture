@@ -12,7 +12,7 @@ from pycture import record as pyr
 def main(args):
     data_filename = args.data_filename
     definition_filename = args.definition_filename
-    output_filename = args.output
+    output_filename = args.output.strip()
 
     record_structure = read_record(definition_filename, args.prefix)
 
@@ -25,29 +25,31 @@ def main(args):
     convert_all_files(args.aggregate_by, data_filename, output_filename, record_structure)
 
 def check_output_exist(output_filename):
-    new_name = ''
+    new_name = rename_if_exist(output_filename)
     while new_name != output_filename:
+        new_name = rename_if_exist(new_name)
         output_filename = new_name
-        new_name = rename_if_exist(output_filename)
 
     return new_name
 
 def rename_if_exist(output_filename):
     if os.path.exists(output_filename):
-        print(f"{output_filename} already exists. Do you want to overwrite it?. If no it will be renamed (Y/n)")
-        answer = sys.stdin.readline()
-        if answer == 'Y' or answer == 'y' or answer == '':
+        print(f'{output_filename} already exists. Do you want to overwrite it?. If no it will be renamed (Y/n)', end=' ')
+        answer = sys.stdin.readline().strip()
+        if answer in ('Y', 'y',''):
             os.remove(output_filename)
             return output_filename
-        else:
-            return file_rename(output_filename)
+
+        return file_rename(output_filename)
+
+    return output_filename
 
 def file_rename(output_filename):
     directory = os.path.dirname(output_filename)
     basename = os.path.basename(output_filename)
     filename_tokens = basename.split('.')
 
-    renamed = filename_tokens[0] + ['renamed'] + filename_tokens[1:]
+    renamed = '.'.join([filename_tokens[0], 'renamed'] + filename_tokens[1:])
     return os.path.join(directory, renamed)
 
 def convert_all_files(aggregate_by, data_filename, output_filename, record_structure):
