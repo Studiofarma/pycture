@@ -31,6 +31,7 @@ def converto_to_csv(
     structure,
     text_record,
     aggregate_by = [],
+    keep_list = [],
     separator=';',
     new_line = '\n',
     row_listner_fn = _row_identity):
@@ -40,6 +41,7 @@ def converto_to_csv(
         structure,
         text_record_iterator,
         aggregate_by,
+        keep_list,
         separator,
         row_listner_fn)
 
@@ -49,9 +51,13 @@ def convert_iterator_to_csv(
     structure,
     text_record_iterator,
     aggregate_by = [],
+    keep_list = [],
     separator=';',
     row_listner_fn = _row_identity):
-    column_definitions = structure.traverse_leaves(pruned_branches=aggregate_by)
+    column_definitions = structure.traverse_leaves(
+        pruned_branches=aggregate_by,
+        keep_branches=keep_list)
+    
     headers = separator.join([x.name for x in column_definitions])
 
     lines_iterator = map(
