@@ -2,8 +2,10 @@
 
 import argparse
 import os
+import sys
 import fnmatch
 from tqdm import tqdm
+from pathlib import Path
 from pycture import conversion
 from pycture import record as pyr
 
@@ -19,19 +21,54 @@ def main(args):
         if args.print_definition:
             exit(0)
 
-    with open(data_filename, 'r', encoding='utf-8') as datafile_iterator:
-        data_lines = count_file_lines(data_filename)
+    output_filename = check_output_exist(output_filename)
+    convert_all_files(args.aggregate_by, data_filename, output_filename, record_structure)
+
+def check_output_exist(output_filename):
+    new_name = ''
+    while new_name != output_filename:
+        output_filename = new_name
+        new_name = rename_if_exist(output_filename)
+
+    return new_name
+
+def rename_if_exist(output_filename):
+    if os.path.exists(output_filename):
+        print(f"{output_filename} already exists. Do you want to overwrite it?. If no it will be renamed (Y/n)")
+        answer = sys.stdin.readline()
+        if answer == 'Y' or answer == 'y' or answer == '':
+            os.remove(output_filename)
+            return output_filename
+        else:
+            return file_rename(output_filename)
+
+def file_rename(output_filename):
+    directory = os.path.dirname(output_filename)
+    basename = os.path.basename(output_filename)
+    filename_tokens = basename.split('.')
+
+    renamed = filename_tokens[0] + ['renamed'] + filename_tokens[1:]
+    return os.path.join(directory, renamed)
+
+def convert_all_files(aggregate_by, data_filename, output_filename, record_structure):
+    data_filenames = file_list(data_filename)
+    for filename in data_filenames:
+        convert(aggregate_by, output_filename, record_structure, filename)
+
+def convert(aggregate_by, output_filename, record_structure, filename):
+    with open(filename, 'r', encoding='utf-8') as datafile_iterator:
+        data_lines = count_file_lines(filename)
         with tqdm(total=data_lines) as progress_bar:
             def update_bar(i, _, line_out):
-                progress_bar.set_description(f'Processed lines {i}')
+                progress_bar.set_description(os.path.basename(filename))
                 progress_bar.update()
                 return line_out
 
             csv_text_iterator = conversion.convert_iterator_to_csv(
-                record_structure,
-                datafile_iterator,
-                aggregate_by=args.aggregate_by,
-                row_listner_fn = update_bar)
+                        record_structure,
+                        datafile_iterator,
+                        aggregate_by=aggregate_by,
+                        row_listner_fn = update_bar)
 
             write_to_output(output_filename, csv_text_iterator)
 
@@ -61,7 +98,7 @@ def read_file(filename):
         return f.read()
 
 def write_to_output(output_filename, csv_text_iterator):
-    with open(output_filename, 'w', encoding='utf-8') as output_file:
+    with open(output_filename, 'a', encoding='utf-8') as output_file:
         output_file.writelines(f'{l}\n' for l in csv_text_iterator)
 
 def count_file_lines(filename):
@@ -73,7 +110,7 @@ if __name__ == "__main__":
         description='Convert a serialized Cobol data file into CSV, given the Cobol definition file.')
     parser.add_argument(
         'data_filename', nargs='?',
-        help='the filename of the data export in the COBOL format')
+        help='The filename of the data export in the COBOL format. You can use wildchars like * in order to match many files (es. c:\\mydir\\*.txt)')
     parser.add_argument(
         'definition_filename', nargs='?',
         help='the filename of COBOL picture definition that describes the data')
