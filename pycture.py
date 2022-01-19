@@ -22,7 +22,7 @@ def main(args):
             exit(0)
 
     output_filename = check_output_exist(output_filename)
-    convert_all_files(args.aggregate_by, data_filename, output_filename, record_structure)
+    convert_all_files(args.keep_only, args.aggregate_by, data_filename, output_filename, record_structure)
 
 def check_output_exist(output_filename):
     new_name = rename_if_exist(output_filename)
@@ -52,12 +52,12 @@ def file_rename(output_filename):
     renamed = '.'.join([filename_tokens[0], 'renamed'] + filename_tokens[1:])
     return os.path.join(directory, renamed)
 
-def convert_all_files(aggregate_by, data_filename, output_filename, record_structure):
+def convert_all_files(keep_list, aggregate_by, data_filename, output_filename, record_structure):
     data_filenames = file_list(data_filename)
     for filename in data_filenames:
-        convert(aggregate_by, output_filename, record_structure, filename)
+        convert(keep_list, aggregate_by, output_filename, record_structure, filename)
 
-def convert(aggregate_by, output_filename, record_structure, filename):
+def convert(keep_list, aggregate_by, output_filename, record_structure, filename):
     with open(filename, 'r', encoding='utf-8') as datafile_iterator:
         data_lines = count_file_lines(filename)
         with tqdm(total=data_lines) as progress_bar:
@@ -70,6 +70,7 @@ def convert(aggregate_by, output_filename, record_structure, filename):
                         record_structure,
                         datafile_iterator,
                         aggregate_by=aggregate_by,
+                        keep_list=keep_list,
                         row_listner_fn = update_bar)
 
             write_to_output(output_filename, csv_text_iterator)
@@ -134,6 +135,9 @@ if __name__ == "__main__":
     parser.add_argument(
         '--aggregate-by',  nargs='+', default=[],
         help='variables names used to aggregate')
+    parser.add_argument(
+        '--keep-only',  nargs='+', default=[],
+        help='you can pass a limited list of variables to export')
     args = parser.parse_args()
 
     try:
