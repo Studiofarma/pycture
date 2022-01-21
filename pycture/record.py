@@ -33,6 +33,9 @@ class Record:
     def with_child(self, children):
         return Record(self.name, self.level, *(children))
 
+    def redefines(self, redefines_list):
+        return self.with_child([child.redefines(redefines_list) for child in self.children])
+
     @cached_property
     def size(self):
         return sum([child.size for child in self.children])
@@ -74,13 +77,17 @@ class Redefines:
 
     def add_redefinition(self, redefinition):
         return self.with_redefinitions(self.redefinitions + [redefinition])
-    
+
     def with_redefinitions(self, redefinitions):
         return Redefines(self.original_definition, *(redefinitions))
 
     def last_redefinition(self):
         return self.redefinitions[-1]
-        
+
+    def redefines(self, redefines_list):
+        redefine = next((r for r in self.redefinitions if r.name in redefines_list), None)
+        return self.original_definition if redefine is None else redefine
+
     def __eq__(self, other):
         return common.eq(self, other)
 

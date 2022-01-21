@@ -74,3 +74,4 @@ from pycture import structure as pys
 def test_can_provide_the_structure_of_a_record(record, expected_result):
     actual_result = record.structure
     assert actual_result == expected_result
+

@@ -8,13 +8,14 @@ from tqdm import tqdm
 from pathlib import Path
 from pycture import conversion
 from pycture import record as pyr
+from pycture import structure as pys
 
 def main(args):
     data_filename = args.data_filename
     definition_filename = args.definition_filename
     output_filename = args.output.strip()
 
-    record_structure = read_record(definition_filename, args.prefix)
+    record_structure = read_record(definition_filename, args.prefix, args.redefines)
 
     if args.verbose or args.print_definition:
         pretty_print(record_structure)
@@ -85,10 +86,10 @@ def file_list(path):
 
     return out_file_list
 
-def read_record(definition_filename, prefix):
+def read_record(definition_filename, prefix, redefines_list):
     definition_file_text = read_file(definition_filename)
     record = pyr.read_record(definition_file_text, prefix)
-    return record.structure
+    return pys.read_structure(record, redefines_list)
 
 def pretty_print(record_obj):
     import json
@@ -138,6 +139,9 @@ if __name__ == "__main__":
     parser.add_argument(
         '--keep-only',  nargs='+', default=[],
         help='you can pass a limited list of variables to export')
+    parser.add_argument(
+        '--redefines',  nargs='+', default=[],
+        help='the list of redefines to use')
     args = parser.parse_args()
 
     try:

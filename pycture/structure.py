@@ -56,8 +56,10 @@ class Structure:
     def __repr__(self):
         return str(self.__dict__)
 
-def read_structure(record):
-    root = Structure(record.name, 0, record.size)
-    if isinstance(record, pyr.Record):
-        root = root.add(record.children)
+def read_structure(record, redefines_list = []):
+    redefined_record = record.redefines(redefines_list)
+
+    root = Structure(redefined_record.name, 0, redefined_record.size)
+    if isinstance(redefined_record, pyr.Record):
+        root = root.add(redefined_record.children)
     return root

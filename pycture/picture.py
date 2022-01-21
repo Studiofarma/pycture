@@ -24,6 +24,9 @@ class Picture:
     def add_to(self, record):
         return record.add_child(self)
 
+    def redefines(self, _):
+        return self
+
     def __eq__(self, other):
         return common.eq(self, other)
 
