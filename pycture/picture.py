@@ -55,10 +55,10 @@ def read_picture(picture_string, ignore_prefix = ''):
     start_index = _max_index_of_numeric(picture_string_tokens[:2], 1)
     level = int(picture_string_tokens[start_index])
     name_index = start_index + 1
-    name = remove_prefix(picture_string_tokens[name_index], ignore_prefix)
 
-    is_redefines = _is_redefines(picture_string_tokens, name_index)
+    (name, is_redefines) = _is_redefines(picture_string_tokens, name_index)
     picture_string_tokens = _remove_redefines_keywords(picture_string_tokens, name, is_redefines)
+    name = remove_prefix(name, ignore_prefix)
 
     if len(picture_string_tokens) == 2 + start_index:
         my_return = pyr.Record(name, level)
@@ -79,10 +79,12 @@ def _remove_redefines_keywords(picture_string_tokens, name, is_redefines):
 
 def _is_redefines(picture_string_tokens, name_index):
     redefines_index = name_index + 1
-    if len(picture_string_tokens) > redefines_index:
-        return picture_string_tokens[redefines_index] == REDEFINES_CONST
+    if picture_string_tokens[name_index] == REDEFINES_CONST:
+        return ('*r', True)
+    elif len(picture_string_tokens) > redefines_index:
+        return (picture_string_tokens[name_index], picture_string_tokens[redefines_index] == REDEFINES_CONST)
     else:
-        return False
+        return (picture_string_tokens[name_index], False)
 
 def _max_index_of_numeric(tokens, max_index):
     return min(_max_index_of(tokens, lambda x: x.isnumeric()), max_index)

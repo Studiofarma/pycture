@@ -284,6 +284,20 @@ def test_can_read_a_cobol_record(record, expected_result):
             pyc.Picture('zz', 2, 2)
         )
     ),
+    (
+        """01 banana.
+                02 pera.
+                    03 pera-1 pic 9.
+                    03 pera-2 pic x.
+                02 redefines pera pic 99.
+        """,
+        pyr.Record('banana', 1,
+            pyr.Redefines(
+                pyr.Record('pera', 2, pyc.Picture('pera-1', 1, 3), pyc.Picture('pera-2', 1, 3)),
+                pyc.Picture('*r', 2, level = 2)
+            )
+        )
+    ),
 ])
 def test_can_read_a_cobol_record_with_redefines(record, expected_result):
     actual_result = pyr.read_record(record)
