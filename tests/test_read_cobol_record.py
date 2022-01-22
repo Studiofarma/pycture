@@ -337,20 +337,36 @@ def test_return_the_size_of_the_record(record, expected_result):
     actual_result = record.size
     assert actual_result == expected_result
 
-def test_can_select_the_correct_redefines():
-    record = pyr.Record('banana', 1,
+@pytest.mark.parametrize('record, expected_record', [
+    (
+        pyr.Record('banana', 1,
             pyr.Redefines(
                 pyr.Record('pera', 2, pyc.Picture('pera-1', 1, 3), pyc.Picture('pera-2', 1, 3)),
                 pyr.Record('xx', 2, pyc.Picture('xx-1', 1, 3), pyc.Picture('xx-2', 1, 3)),
                 pyr.Record('yy', 2, pyc.Picture('yy-1', 1, 3), pyc.Picture('yy-2', 1, 3))
             ),
             pyc.Picture('zz', 2, 2)
-        )
-    expected_record = pyr.Record('banana', 1,
+        ),
+        pyr.Record('banana', 1,
             pyr.Record('xx', 2, pyc.Picture('xx-1', 1, 3), pyc.Picture('xx-2', 1, 3)),
             pyc.Picture('zz', 2, 2)
         )
-
+    ),
+    (
+        pyr.Record('banana', 1,
+            pyr.Redefines(
+                pyr.Record('pera', 2, pyc.Picture('pera-1', 1, 3), pyc.Picture('pera-2', 1, 3)),
+                pyc.Picture('xx', 2, 2),
+                pyr.Record('yy', 2, pyc.Picture('yy-1', 1, 3), pyc.Picture('yy-2', 1, 3))
+            ),
+            pyc.Picture('zz', 2, 2)
+        ),
+        pyr.Record('banana', 1,
+            pyc.Picture('xx', 2, 2),
+            pyc.Picture('zz', 2, 2)
+        )
+    ),
+])
+def test_can_select_the_correct_redefines(record, expected_record):
     actual_record = record.redefines(['xx'])
-
     assert actual_record == expected_record
