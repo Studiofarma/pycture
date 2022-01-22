@@ -74,13 +74,13 @@ def read_picture(picture_string, ignore_prefix = ''):
     return my_return
 
 def _remove_redefines_keywords(picture_string_tokens, name, is_redefines):
-    return [t for t in picture_string_tokens 
+    return [t for t in picture_string_tokens
             if t not in (REDEFINES_CONST, name) or not is_redefines]
 
 def _is_redefines(picture_string_tokens, name_index):
     redefines_index = name_index + 1
     if picture_string_tokens[name_index] == REDEFINES_CONST:
-        return ('*r', True)
+        return (f'{picture_string_tokens[name_index + 1]}-*', True)
     elif len(picture_string_tokens) > redefines_index:
         return (picture_string_tokens[name_index], picture_string_tokens[redefines_index] == REDEFINES_CONST)
     else:

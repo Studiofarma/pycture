@@ -294,7 +294,7 @@ def test_can_read_a_cobol_record(record, expected_result):
         pyr.Record('banana', 1,
             pyr.Redefines(
                 pyr.Record('pera', 2, pyc.Picture('pera-1', 1, 3), pyc.Picture('pera-2', 1, 3)),
-                pyc.Picture('*r', 2, level = 2)
+                pyc.Picture('pera-*', 2, level = 2)
             )
         )
     ),
