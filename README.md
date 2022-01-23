@@ -1,6 +1,6 @@
 # How to use
 
-``` bash
+```
 usage: pycture.py [-h] [-o [OUTPUT]] [-v] [-d] [-p] [--prefix [PREFIX]]
                   [--aggregate-by AGGREGATE_BY [AGGREGATE_BY ...]]
                   [--keep-only KEEP_ONLY [KEEP_ONLY ...]]
