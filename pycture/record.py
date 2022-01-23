@@ -117,8 +117,15 @@ def remove_all_comments_lines(picture_definition):
         [p for p in picture_definition.split(NEW_LINE) if not is_a_comment_line(p)])
 
 def clean_comments(picture):
-    no_comments = [token for token in picture.split(NEW_LINE) if not should_be_skipped(token)]
+    no_comments = [remove_bar_comments(token) for token in picture.split(NEW_LINE) \
+                   if not should_be_skipped(token)]
     return ''.join(no_comments)
+
+def remove_bar_comments(token):
+    try:
+        return token[:token.index('|')]
+    except ValueError:
+        return token
 
 def first_char_is(string, char):
     return string.strip().startswith(char)

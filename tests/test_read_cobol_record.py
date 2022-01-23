@@ -115,6 +115,23 @@ from pycture import picture as pyc
             pyc.Picture('mela', 3, 2))
     ),
     (
+        """01 banana.
+                02 pera | wild comment
+                pic 9(2).
+
+        """,
+        pyr.Record('banana', 1, pyc.Picture('pera', 2, 2))
+    ),
+    (
+        """01 banana.
+                02 pera | wild comment
+                pic | another wild comment
+                9(2). 
+
+        """,
+        pyr.Record('banana', 1, pyc.Picture('pera', 2, 2))
+    ),
+    (
         """
        01  rec-sdati.
       *    any comment
