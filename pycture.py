@@ -122,7 +122,7 @@ if __name__ == "__main__":
         '-o', '--output',  nargs='?', type=str, const='out.csv', default='out.csv',
         help='the filename to give to the output file')
     parser.add_argument(
-        '-v', '--verbose',  action='store_true',
+        '-vv', '--verbose',  action='store_true',
         help='display more parsing informations, like the interpreted Cobol picture')
     parser.add_argument(
         '-d', '--debug',  action='store_true',
