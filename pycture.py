@@ -5,7 +5,6 @@ import os
 import sys
 import fnmatch
 from tqdm import tqdm
-from pathlib import Path
 from pycture import conversion
 from pycture import record as pyr
 from pycture import structure as pys
