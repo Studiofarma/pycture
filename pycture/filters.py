@@ -19,7 +19,7 @@ class EqualsFilter():
         return ColumnFilter(self, column(column_definitions, self.variable_name))
 
     def match(self, value_to_match):
-        return value_to_match == self.value
+        return value_to_match.strip() == self.value
 
 class ColumnFilter():
     def __init__(self, inner_filter, column_definition):
@@ -27,7 +27,7 @@ class ColumnFilter():
         self.column = column_definition
 
     def match(self, value_to_match):
-        return self.inner_filter.match(value_to_match[self.column.start_at:self.column.length])
+        return self.inner_filter.match(value_to_match[self.column.start_at:self.column.start_at + self.column.length])
 
 def column(column_definitions, name):
     return next(c for c in column_definitions if c.name == name)

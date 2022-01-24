@@ -9,6 +9,7 @@ from pathlib import Path
 from pycture import conversion
 from pycture import record as pyr
 from pycture import structure as pys
+from pycture import filters as pyf
 
 def main(args):
     data_filename = args.data_filename
@@ -23,7 +24,15 @@ def main(args):
             exit(0)
 
     output_filename = check_output_exist(output_filename)
-    convert_all_files(args.keep_only, args.aggregate_by, data_filename, output_filename, record_structure)
+
+    filters = build_filter(args)
+    convert_all_files(args.keep_only, args.aggregate_by, data_filename, output_filename, record_structure, filters)
+
+def build_filter(args):
+    if args.eq is None:
+        return pyf.MatchAllFilter()
+    else: 
+        return pyf.EqualsFilter(args.eq[0], args.eq[1])
 
 def check_output_exist(output_filename):
     new_name = rename_if_exist(output_filename)
@@ -53,12 +62,12 @@ def file_rename(output_filename):
     renamed = '.'.join([filename_tokens[0], 'renamed'] + filename_tokens[1:])
     return os.path.join(directory, renamed)
 
-def convert_all_files(keep_list, aggregate_by, data_filename, output_filename, record_structure):
+def convert_all_files(keep_list, aggregate_by, data_filename, output_filename, record_structure, filters):
     data_filenames = file_list(data_filename)
     for filename in data_filenames:
-        convert(keep_list, aggregate_by, output_filename, record_structure, filename)
+        convert(keep_list, aggregate_by, output_filename, record_structure, filename, filters)
 
-def convert(keep_list, aggregate_by, output_filename, record_structure, filename):
+def convert(keep_list, aggregate_by, output_filename, record_structure, filename, filters):
     with open(filename, 'r', encoding='utf-8') as datafile_iterator:
         data_lines = count_file_lines(filename)
         with tqdm(total=data_lines) as progress_bar:
@@ -72,6 +81,7 @@ def convert(keep_list, aggregate_by, output_filename, record_structure, filename
                         datafile_iterator,
                         aggregate_by=aggregate_by,
                         keep_list=keep_list,
+                        filters=filters,
                         row_listner_fn = update_bar)
 
             write_to_output(output_filename, csv_text_iterator)
@@ -142,6 +152,9 @@ if __name__ == "__main__":
     parser.add_argument(
         '--redefines',  nargs='+', default=[],
         help='the list of redefines to use')
+    parser.add_argument(
+        '--eq',  nargs=2,
+        help='filter record by equality. Example: --eq variable-name xx')
     args = parser.parse_args()
 
     try:
