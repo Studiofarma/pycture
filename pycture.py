@@ -29,10 +29,13 @@ def main(args):
     convert_all_files(args.keep_only, args.aggregate_by, data_filename, output_filename, record_structure, filters)
 
 def build_filter(args):
-    if args.eq is None:
+    if args.eq is None and args.gt is None and args.lt is None:
         return pyf.MatchAllFilter()
     else:
-        filters = [pyf.EqualsFilter(eq[0], eq[1]) for eq in args.eq]        
+        equals_filters = [pyf.EqualsFilter(eq[0], eq[1]) for eq in args.eq] if args.eq is not None else []
+        greater_filters = [pyf.GreaterThenFilter(gt[0], gt[1]) for gt in args.gt] if args.gt is not None else []
+        lesser_filters = [pyf.LessThenFilter(lt[0], lt[1]) for lt in args.lt] if args.lt is not None else []
+        filters = equals_filters + greater_filters + lesser_filters
         return pyf.AndFilter(*filters)
 
 def check_output_exist(output_filename):
@@ -156,6 +159,12 @@ if __name__ == "__main__":
     parser.add_argument(
         '--eq',  nargs=2, action='append',
         help='filter record by equality. Example: --eq variable-name xx')
+    parser.add_argument(
+        '--gt',  nargs=2, action='append',
+        help='filter record by greater then. Example: --gt variable-name xx')
+    parser.add_argument(
+        '--lt',  nargs=2, action='append',
+        help='filter record by less then. Example: --lt variable-name xx')
     args = parser.parse_args()
 
     try:
