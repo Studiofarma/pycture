@@ -1,6 +1,7 @@
 import itertools
 from pycture import common
 from pycture import record as pyr
+from pycture import filters as pyf
 
 def _row_identity(i, input_line, output_line):
     return output_line
@@ -32,6 +33,7 @@ def converto_to_csv(
     text_record,
     aggregate_by = [],
     keep_list = [],
+    filters = pyf.MatchAllFilter(),
     separator=';',
     new_line = '\n',
     row_listner_fn = _row_identity):
@@ -42,6 +44,7 @@ def converto_to_csv(
         text_record_iterator,
         aggregate_by,
         keep_list,
+        filters,
         separator,
         row_listner_fn)
 
@@ -52,18 +55,20 @@ def convert_iterator_to_csv(
     text_record_iterator,
     aggregate_by = [],
     keep_list = [],
+    filters = pyf.MatchAllFilter(),
     separator=';',
     row_listner_fn = _row_identity):
     column_definitions = structure.traverse_leaves(
         pruned_branches=aggregate_by,
         keep_branches=keep_list)
-    
+
     headers = separator.join([x.name for x in column_definitions])
+    cached_filter = filters.with_columns(column_definitions)
 
     lines_iterator = map(
         lambda iline: _split_by_column_length(iline[0], iline[1], column_definitions, separator, row_listner_fn),
         filter(
-            lambda iline: common.is_not_empty(iline[1]),
+            lambda iline: common.is_not_empty(iline[1]) and cached_filter.match(iline[1]),
             enumerate(text_record_iterator)))
 
     return itertools.chain([headers], lines_iterator)
