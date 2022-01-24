@@ -21,6 +21,17 @@ class EqualsFilter():
     def match(self, value_to_match):
         return value_to_match.strip() == self.value
 
+class AndFilter():
+    def __init__(self, *filters):
+        self.filters = filters
+
+    def with_columns(self, column_definitions):
+        filters = [ColumnFilter(f, column(column_definitions, f.variable_name)) for f in self.filters]
+        return AndFilter(*filters)
+
+    def match(self, value_to_match):
+        return all(map(lambda f: f.match(value_to_match), self.filters))
+
 class ColumnFilter():
     def __init__(self, inner_filter, column_definition):
         self.inner_filter = inner_filter

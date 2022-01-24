@@ -31,8 +31,9 @@ def main(args):
 def build_filter(args):
     if args.eq is None:
         return pyf.MatchAllFilter()
-    else: 
-        return pyf.EqualsFilter(args.eq[0], args.eq[1])
+    else:
+        filters = [pyf.EqualsFilter(eq[0], eq[1]) for eq in args.eq]        
+        return pyf.AndFilter(*filters)
 
 def check_output_exist(output_filename):
     new_name = rename_if_exist(output_filename)
@@ -153,7 +154,7 @@ if __name__ == "__main__":
         '--redefines',  nargs='+', default=[],
         help='the list of redefines to use')
     parser.add_argument(
-        '--eq',  nargs=2,
+        '--eq',  nargs=2, action='append',
         help='filter record by equality. Example: --eq variable-name xx')
     args = parser.parse_args()
 
