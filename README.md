@@ -2,7 +2,7 @@
 
 ```
 usage: pycture.py [-h] [-o [OUTPUT]] [-vv] [-d] [-p] [--prefix [PREFIX]] [--aggregate-by AGGREGATE_BY [AGGREGATE_BY ...]] [--keep-only KEEP_ONLY [KEEP_ONLY ...]] [--redefines REDEFINES [REDEFINES ...]]
-                  [--eq EQ EQ] [--gt GT GT] [--lt LT LT]
+                  [--eq EQ EQ] [--gt GT GT] [--lt LT LT] [--neq NEQ NEQ]
                   [data_filename] [definition_filename]
 
 Convert a serialized Cobol data file into CSV, given the Cobol definition file.
@@ -26,7 +26,8 @@ optional arguments:
                         you can pass a limited list of variables to export
   --redefines REDEFINES [REDEFINES ...]
                         the list of redefines to use
-  --eq EQ EQ            filter records by equality. Example: --eq variable-name xx
-  --gt GT GT            filter records by greater then. Example: --gt variable-name xx
-  --lt LT LT            filter records by less then. Example: --lt variable-name xx
+  --eq EQ EQ            filter record by equality. Example: --eq variable-name xx
+  --gt GT GT            filter record by greater then. Example: --gt variable-name xx
+  --lt LT LT            filter record by less then. Example: --lt variable-name xx
+  --neq NEQ NEQ         filter record by not equals. Example: --neq variable-name xx
 ```

@@ -21,6 +21,17 @@ class EqualsFilter():
     def match(self, value_to_match):
         return value_to_match.strip() == self.value
 
+class NotEqualsFilter():
+    def __init__(self, variable_name, value):
+        self.variable_name = variable_name
+        self.value = value
+
+    def with_columns(self, column_definitions):
+        return ColumnFilter(self, column(column_definitions, self.variable_name))
+
+    def match(self, value_to_match):
+        return value_to_match.strip() != self.value
+
 class GreaterThenFilter():
     def __init__(self, variable_name, value):
         self.variable_name = variable_name
