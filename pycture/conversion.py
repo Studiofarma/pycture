@@ -57,7 +57,8 @@ def convert_iterator_to_csv(
     keep_list = [],
     filters = pyf.MatchAllFilter(),
     separator=';',
-    row_listner_fn = _row_identity):
+    row_listner_fn = _row_identity,
+    write_headers=True):
     column_definitions = structure.traverse_leaves(
         pruned_branches=aggregate_by,
         keep_branches=keep_list)
@@ -71,7 +72,7 @@ def convert_iterator_to_csv(
             lambda iline: common.is_not_empty(iline[1]) and cached_filter.match(iline[1]),
             enumerate(text_record_iterator)))
 
-    return itertools.chain([headers], lines_iterator)
+    return itertools.chain([headers], lines_iterator) if write_headers else lines_iterator
 
 def _split_by_column_length(
     i,

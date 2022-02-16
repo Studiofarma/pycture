@@ -68,10 +68,10 @@ def file_rename(output_filename):
 
 def convert_all_files(keep_list, aggregate_by, data_filename, output_filename, record_structure, filters):
     data_filenames = file_list(data_filename)
-    for filename in data_filenames:
-        convert(keep_list, aggregate_by, output_filename, record_structure, filename, filters)
+    for i, filename in enumerate(data_filenames):
+        convert(keep_list, aggregate_by, output_filename, record_structure, filename, filters, write_headers = i == 0)
 
-def convert(keep_list, aggregate_by, output_filename, record_structure, filename, filters):
+def convert(keep_list, aggregate_by, output_filename, record_structure, filename, filters, write_headers):
     with open(filename, 'r', encoding='utf-8') as datafile_iterator:
         data_lines = count_file_lines(filename)
         with tqdm(total=data_lines) as progress_bar:
@@ -86,7 +86,8 @@ def convert(keep_list, aggregate_by, output_filename, record_structure, filename
                         aggregate_by=aggregate_by,
                         keep_list=keep_list,
                         filters=filters,
-                        row_listner_fn = update_bar)
+                        row_listner_fn = update_bar,
+                        write_headers = write_headers)
 
             write_to_output(output_filename, csv_text_iterator)
 
