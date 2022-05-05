@@ -1,9 +1,9 @@
 import re
 import functools as ft
 from functools import cached_property
-from pycture import common
-from pycture import record as pyr
-from pycture import structure as pys
+from pycturelib import common
+from pycturelib import record as pyr
+from pycturelib import structure as pys
 
 REDEFINES_CONST = 'redefines'
 

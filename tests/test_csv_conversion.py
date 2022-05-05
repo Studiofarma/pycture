@@ -1,8 +1,8 @@
 import pytest
-from pycture import structure as pys
-from pycture import conversion
-from pycture import common
-from pycture import filters as pyf
+from pycturelib import structure as pys
+from pycturelib import conversion
+from pycturelib import common
+from pycturelib import filters as pyf
 
 @pytest.mark.parametrize('structure, text_record, expected_csv, aggregate_by, keep_list', [
     (

@@ -1,5 +1,5 @@
-from pycture import common
-from pycture import record as pyr
+from pycturelib import common
+from pycturelib import record as pyr
 
 class Structure:
     def __init__(self, name, start_at, length, *childred_structures):

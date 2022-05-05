@@ -1,7 +1,7 @@
 import itertools
-from pycture import common
-from pycture import record as pyr
-from pycture import filters as pyf
+from pycturelib import common
+from pycturelib import record as pyr
+from pycturelib import filters as pyf
 
 def _row_identity(i, input_line, output_line):
     return output_line

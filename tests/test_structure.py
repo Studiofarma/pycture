@@ -1,5 +1,5 @@
 import pytest
-from pycture import structure as pys
+from pycturelib import structure as pys
 
 @pytest.mark.parametrize('structure, traverse_result, pruned_branches, keep_branches', [
     (

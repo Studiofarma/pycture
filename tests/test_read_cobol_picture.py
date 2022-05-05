@@ -1,6 +1,6 @@
 import pytest
-from pycture import picture as pyc
-from pycture import record as pyr
+from pycturelib import picture as pyc
+from pycturelib import record as pyr
 
 @pytest.mark.parametrize('picture, expected_result', [
     ('77 banana pic 9', pyc.Picture('banana', 1)),

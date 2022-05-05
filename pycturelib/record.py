@@ -1,8 +1,8 @@
 import itertools as it
 from functools import cached_property
-from pycture import picture as pyc
-from pycture import structure as pys
-from pycture import common
+from pycturelib import picture as pyc
+from pycturelib import structure as pys
+from pycturelib import common
 
 NEW_LINE = '\n'
 

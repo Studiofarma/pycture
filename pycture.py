@@ -5,10 +5,10 @@ import os
 import sys
 import fnmatch
 from tqdm import tqdm
-from pycture import conversion
-from pycture import record as pyr
-from pycture import structure as pys
-from pycture import filters as pyf
+from pycturelib import conversion
+from pycturelib import record as pyr
+from pycturelib import structure as pys
+from pycturelib import filters as pyf
 
 def main(args):
     data_filename = args.data_filename

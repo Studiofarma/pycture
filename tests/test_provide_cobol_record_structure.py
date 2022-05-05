@@ -1,7 +1,7 @@
 import pytest
-from pycture import record as pyr
-from pycture import picture as pyc
-from pycture import structure as pys
+from pycturelib import record as pyr
+from pycturelib import picture as pyc
+from pycturelib import structure as pys
 
 @pytest.mark.parametrize('record, expected_result', [
     (
