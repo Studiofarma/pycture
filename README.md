@@ -28,7 +28,9 @@ The above instructions does the following:
 
 ## How it works
 
-Pycture parses the file definition and creates an internal representation of it. Pycture then use this representation to print the headers of the CSV and split all the contigous record column, into CSV columns.
+Pycture parses the file definition and creates an internal representation of it. 
+
+Pycture then uses this representation to print the headers of the CSV and split all the contigous record column, into CSV columns.
 
 ### Example
 
@@ -102,6 +104,30 @@ will print
 
 ```
 
+Given the following data file
+
+`example/mydata.txt`
+
+```
+luca                          piccinelli                    19850316
+paolo                         venturi                       19911216
+```
+
+Running
+
+```
+python pycture.py example/mydefinition.cpy example/mydata.txt -o example/out.csv
+```
+
+will output
+
+`example/out.csv`
+
+```cvs
+person.firstname;person.lastname;person.date-of-birth.date-of-birth-year;person.date-of-birth.date-of-birth-month;person.date-of-birth.date-of-birth-day
+luca                          ;piccinelli                    ;1985;03;16
+paolo                         ;venturi                       ;1991;12;16
+```
 
 ## Help `python pycture.py -h`
 
