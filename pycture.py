@@ -25,7 +25,7 @@ def main(args):
     output_filename = check_output_exist(output_filename)
 
     filters = build_filter(args)
-    convert_all_files(args.keep_only, args.aggregate_by, data_filename, output_filename, record_structure, filters)
+    convert_all_files(args.keep_only, args.use_groups, data_filename, output_filename, record_structure, filters)
 
 def build_filter(args):
     if args.eq is None and args.gt is None and args.lt is None and args.neq is None:
@@ -66,12 +66,12 @@ def file_rename(output_filename):
     renamed = '.'.join([filename_tokens[0], 'renamed'] + filename_tokens[1:])
     return os.path.join(directory, renamed)
 
-def convert_all_files(keep_list, aggregate_by, data_filename, output_filename, record_structure, filters):
+def convert_all_files(keep_list, use_groups, data_filename, output_filename, record_structure, filters):
     data_filenames = file_list(data_filename)
     for i, filename in enumerate(data_filenames):
-        convert(keep_list, aggregate_by, output_filename, record_structure, filename, filters, write_headers = i == 0)
+        convert(keep_list, use_groups, output_filename, record_structure, filename, filters, write_headers = i == 0)
 
-def convert(keep_list, aggregate_by, output_filename, record_structure, filename, filters, write_headers):
+def convert(keep_list, use_groups, output_filename, record_structure, filename, filters, write_headers):
     with open(filename, 'r', encoding='utf-8') as datafile_iterator:
         data_lines = count_file_lines(filename)
         with tqdm(total=data_lines) as progress_bar:
@@ -83,7 +83,7 @@ def convert(keep_list, aggregate_by, output_filename, record_structure, filename
             csv_text_iterator = conversion.convert_iterator_to_csv(
                         record_structure,
                         datafile_iterator,
-                        aggregate_by=aggregate_by,
+                        aggregate_by=use_groups,
                         keep_list=keep_list,
                         filters=filters,
                         row_listner_fn = update_bar,
@@ -128,11 +128,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Convert a serialized Cobol data file into CSV, given the Cobol definition file.')
     parser.add_argument(
-        'data_filename', nargs='?',
-        help='The filename of the data export in the COBOL format. You can use wildchars like * in order to match many files (es. c:\\mydir\\*.txt)')
-    parser.add_argument(
         'definition_filename', nargs='?',
         help='the filename of COBOL picture definition that describes the data')
+    parser.add_argument(
+        'data_filename', nargs='?',
+        help='The filename of the data export in the COBOL format. You can use wildchars like * in order to match many files (es. c:\\mydir\\*.txt)')
     parser.add_argument(
         '-o', '--output',  nargs='?', type=str, const='out.csv', default='out.csv',
         help='the filename to give to the output file')
@@ -149,8 +149,8 @@ if __name__ == "__main__":
         '--prefix',  nargs='?', type=str, const='', default='',
         help='remove a prefix from the name of Cobol variables')
     parser.add_argument(
-        '--aggregate-by',  nargs='+', default=[],
-        help='variables names used to aggregate')
+        '--use-groups',  nargs='+', default=[],
+        help='names of the groups to use')
     parser.add_argument(
         '--keep-only',  nargs='+', default=[],
         help='you can pass a limited list of variables to export')
