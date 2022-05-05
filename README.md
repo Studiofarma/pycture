@@ -26,6 +26,83 @@ The above instructions does the following:
  - run the script with `python pycture.py [path/to/definition/filename] [path/to/data/filename]`
  - run the script with `python pycture.py -h` for help
 
+## How it works
+
+Pycture parses the file definition and creates an internal representation of it. Pycture then use this representation to print the headers of the CSV and split all the contigous record column, into CSV columns.
+
+### Example
+
+Given the following picture definition
+
+`example/mydefinition.cpy`
+
+```Cobol
+01 person.
+    02 firstname pic x(30).
+    02 lastname  pic x(30).
+    02 date-of-birth.
+        03 date-of-birth-year  pic 9(04).
+        03 date-of-birth-month pic 9(02).
+        03 date-of-birth-day   pic 9(02).
+```
+
+we can see the internal representation running 
+
+```sh
+python pycture.py example/mydefinition.cpy -p
+```
+
+will print
+
+```json
+{
+    "name": "person",
+    "start_at": 0,
+    "length": 68,
+    "children_structures": [
+        {
+            "name": "person.firstname",
+            "start_at": 0,
+            "length": 30,
+            "children_structures": []
+        },
+        {
+            "name": "person.lastname",
+            "start_at": 30,
+            "length": 30,
+            "children_structures": []
+        },
+        {
+            "name": "person.date-of-birth",
+            "start_at": 60,
+            "length": 8,
+            "children_structures": [
+                {
+                    "name": "person.date-of-birth.date-of-birth-year",
+                    "start_at": 60,
+                    "length": 4,
+                    "children_structures": []
+                },
+                {
+                    "name": "person.date-of-birth.date-of-birth-month",
+                    "start_at": 64,
+                    "length": 2,
+                    "children_structures": []
+                },
+                {
+                    "name": "person.date-of-birth.date-of-birth-day",
+                    "start_at": 66,
+                    "length": 2,
+                    "children_structures": []
+                }
+            ]
+        }
+    ]
+}
+
+```
+
+
 ## Help `python pycture.py -h`
 
 ```
