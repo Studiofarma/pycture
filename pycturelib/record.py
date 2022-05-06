@@ -102,7 +102,7 @@ def read_record(picture_definition, ignore_prefix=''):
 
     pictures = filter(
         common.is_not_empty,
-        map(clean_comments, picture_definition_without_comments.split('.')))
+        map(remove_newlines, picture_definition_without_comments.split('.')))
     pictures = it.dropwhile(lambda p: not is_a_root_variable(p), pictures)
     interpreted_lines = [pyc.read_picture(picture, ignore_prefix) for picture in pictures]
 
@@ -114,12 +114,10 @@ def read_record(picture_definition, ignore_prefix=''):
 
 def remove_all_comments_lines(picture_definition):
     return NEW_LINE.join(
-        [p for p in picture_definition.split(NEW_LINE) if not is_a_comment_line(p)])
+        [remove_bar_comments(p) for p in picture_definition.split(NEW_LINE) if not is_a_comment_line(p)])
 
-def clean_comments(picture):
-    no_comments = [remove_bar_comments(token) for token in picture.split(NEW_LINE) \
-                   if not should_be_skipped(token)]
-    return ''.join(no_comments)
+def remove_newlines(picture):
+    return picture.replace(NEW_LINE, '')
 
 def remove_bar_comments(token):
     try:

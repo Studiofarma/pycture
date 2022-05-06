@@ -113,7 +113,7 @@ def pretty_print(record_obj):
     print(json_obj)
 
 def read_file(filename):
-    with open(filename, 'r', encoding='utf-8') as f:
+    with open(filename, 'r', encoding='Windows-1252') as f:
         return f.read()
 
 def write_to_output(output_filename, csv_text_iterator):

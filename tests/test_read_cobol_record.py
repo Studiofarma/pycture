@@ -116,6 +116,39 @@ from pycturelib import picture as pyc
     ),
     (
         """01 banana.
+                02 pera pic 9(2). | comment with point.
+
+        """,
+        pyr.Record('banana', 1, pyc.Picture('pera', 2, 2))
+    ),
+    (
+        """01 banana.
+                02 pera pic 9(2). | comment with point.cpy
+
+        """,
+        pyr.Record('banana', 1, pyc.Picture('pera', 2, 2))
+    ),
+    (
+        """01 banana.
+                02 pera pic 9(2).
+                02 mela pic 9(2). | comment with point.cpy
+
+        """,
+        pyr.Record('banana', 1, 
+            pyc.Picture('pera', 2, 2),
+            pyc.Picture('mela', 2, 2)
+        )
+    ),
+    (
+        """01 banana.
+                02 pera | comment with point.cpy
+                pic 9(2).
+
+        """,
+        pyr.Record('banana', 1, pyc.Picture('pera', 2, 2))
+    ),
+    (
+        """01 banana.
                 02 pera | wild comment
                 pic 9(2).
 
@@ -126,7 +159,7 @@ from pycturelib import picture as pyc
         """01 banana.
                 02 pera | wild comment
                 pic | another wild comment
-                9(2). 
+                9(2).
 
         """,
         pyr.Record('banana', 1, pyc.Picture('pera', 2, 2))
