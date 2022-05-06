@@ -26,13 +26,49 @@ The above instructions does the following:
  - run the script with `python pycture.py [path/to/definition/filename] [path/to/data/filename]`
  - run the script with `python pycture.py -h` for help
 
+
+
+## Help `-h | --help`
+
+```
+usage: python pycture.py [-h] [-o [OUTPUT]] [-vv] [-d] [-p] [--prefix [PREFIX]] [--use-groups USE_GROUPS [USE_GROUPS ...]] [--keep-only KEEP_ONLY [KEEP_ONLY ...]] [--redefines REDEFINES [REDEFINES ...]] [--eq EQ EQ]
+                  [--gt GT GT] [--lt LT LT] [--neq NEQ NEQ]
+                  [definition_filename] [data_filename]
+
+Convert a serialized Cobol data file into CSV, given the Cobol definition file.
+
+positional arguments:
+  definition_filename   the filename of COBOL picture definition that describes the data
+  data_filename         The filename of the data export in the COBOL format. You can use wildchars like * in order to match many files (es. c:\mydir\*.txt)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o [OUTPUT], --output [OUTPUT]
+                        the filename to give to the output file
+  -vv, --verbose        display more parsing informations, like the interpreted Cobol picture
+  -d, --debug           display some debug informations, like exception stacktrace
+  -p, --print-definition
+                        display the json of the parsed Cobol picture
+  --prefix [PREFIX]     remove a prefix from the name of Cobol variables
+  --use-groups USE_GROUPS [USE_GROUPS ...]
+                        names of the groups to use
+  --keep-only KEEP_ONLY [KEEP_ONLY ...]
+                        you can pass a limited list of variables to export
+  --redefines REDEFINES [REDEFINES ...]
+                        the list of redefines to use
+  --eq EQ EQ            filter record by equality. Example: --eq variable-name xx
+  --gt GT GT            filter record by greater then. Example: --gt variable-name xx
+  --lt LT LT            filter record by less then. Example: --lt variable-name xx
+  --neq NEQ NEQ         filter record by not equals. Example: --neq variable-name xx
+```
+
 ## How it works
 
 Pycture parses the file definition and creates an internal representation of it. 
 
 Pycture then uses the variable names as column headings, and `start_at` and `length` to split all the contiguous record columns, into CSV columns.
 
-## Features Examples
+## Basic usage and Features Examples
 
 Find example files in [examples](examples).
 
@@ -117,6 +153,7 @@ Given the following data file
 ```
 luca                          piccinelli                    19850316
 paolo                         venturi                       19911216
+mario                         rossi                         20000622
 ```
 
 Running
@@ -133,6 +170,7 @@ will output
 person.firstname;person.lastname;person.date-of-birth.date-of-birth-year;person.date-of-birth.date-of-birth-month;person.date-of-birth.date-of-birth-day
 luca                          ;piccinelli                    ;1985;03;16
 paolo                         ;venturi                       ;1991;12;16
+mario                         ;rossi                         ;2000;06;22
 ```
 
 ### Use group names `--use-groups`
@@ -153,6 +191,7 @@ will output
 person.firstname;person.lastname;person.date-of-birth
 luca                          ;piccinelli                    ;19850316
 paolo                         ;venturi                       ;19911216
+mario                         ;rossi                         ;20000622
 ```
 
 If you doubt the name of the group, you can print the JSON definition and watch there the correct name.
@@ -173,6 +212,7 @@ will output
 person.lastname;person.date-of-birth.date-of-birth-year
 piccinelli                    ;1985
 venturi                       ;1991
+rossi                         ;2000
 ```
 
 ### Use redefines `--redefines`
@@ -232,37 +272,48 @@ will print
 }
 ```
 
+### Filter rows `--eq --neq --lt --gt`
 
-## Help `-h | --help`
+There are some basic filters available to filter out rows that doesn't match the given condition
+
+Given the following data file
+
+`examples/mydata.txt`
 
 ```
-usage: pycture.py [-h] [-o [OUTPUT]] [-vv] [-d] [-p] [--prefix [PREFIX]] [--use-groups USE_GROUPS [USE_GROUPS ...]] [--keep-only KEEP_ONLY [KEEP_ONLY ...]] [--redefines REDEFINES [REDEFINES ...]] [--eq EQ EQ]
-                  [--gt GT GT] [--lt LT LT] [--neq NEQ NEQ]
-                  [definition_filename] [data_filename]
-
-Convert a serialized Cobol data file into CSV, given the Cobol definition file.
-
-positional arguments:
-  definition_filename   the filename of COBOL picture definition that describes the data
-  data_filename         The filename of the data export in the COBOL format. You can use wildchars like * in order to match many files (es. c:\mydir\*.txt)
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -o [OUTPUT], --output [OUTPUT]
-                        the filename to give to the output file
-  -vv, --verbose        display more parsing informations, like the interpreted Cobol picture
-  -d, --debug           display some debug informations, like exception stacktrace
-  -p, --print-definition
-                        display the json of the parsed Cobol picture
-  --prefix [PREFIX]     remove a prefix from the name of Cobol variables
-  --use-groups USE_GROUPS [USE_GROUPS ...]
-                        names of the groups to use
-  --keep-only KEEP_ONLY [KEEP_ONLY ...]
-                        you can pass a limited list of variables to export
-  --redefines REDEFINES [REDEFINES ...]
-                        the list of redefines to use
-  --eq EQ EQ            filter record by equality. Example: --eq variable-name xx
-  --gt GT GT            filter record by greater then. Example: --gt variable-name xx
-  --lt LT LT            filter record by less then. Example: --lt variable-name xx
-  --neq NEQ NEQ         filter record by not equals. Example: --neq variable-name xx
+luca                          piccinelli                    19850316
+paolo                         venturi                       19911216
+mario                         rossi                         20000622
 ```
+
+I want to export only those born after the year 1990
+
+```
+python pycture.py examples/mydefinition.cpy examples/mydata.txt -o examples/out-filter.csv --gt person.date-of-birth.date-of-birth-year 1990
+```
+
+will output
+
+`examples/out-filter.csv`
+
+```csv
+person.firstname;person.lastname;person.date-of-birth.date-of-birth-year;person.date-of-birth.date-of-birth-month;person.date-of-birth.date-of-birth-day
+paolo                         ;venturi                       ;1991;12;16
+mario                         ;rossi                         ;2000;06;22
+```
+
+Filters can be combined in `and`. For example let's export only those born before year 2000 only in the month of march
+
+```
+python pycture.py examples/mydefinition.cpy examples/mydata.txt -o examples/out-filter.csv --lt person.date-of-birth.date-of-birth-year 2000 --eq --eq person.date-of-birth.date-of-birth-month 03
+```
+
+will output
+
+`examples/out-filter.csv`
+
+```csv
+person.firstname;person.lastname;person.date-of-birth.date-of-birth-year;person.date-of-birth.date-of-birth-month;person.date-of-birth.date-of-birth-day
+luca                          ;piccinelli                    ;1985;03;16
+```
+
