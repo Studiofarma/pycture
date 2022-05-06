@@ -21,7 +21,7 @@ python pycture.py [path/to/definition/filename] [path/to/data/filename]
 
 The above instructions does the following:
  - Clone this repository
- - cd into into
+ - cd into the correct directory
  - install requirements
  - run the script with `python pycture.py [path/to/definition/filename] [path/to/data/filename]`
  - run the script with `python pycture.py -h` for help
@@ -173,6 +173,26 @@ paolo                         ;venturi                       ;1991;12;16
 mario                         ;rossi                         ;2000;06;22
 ```
 
+### Conversion of multiple files to CSV using wildcard characters (e.g. *)
+
+If you have multiple files like [`examples/mydata.txt`](examples/mydata.txt) and [`examples/mydata2.txt`](examples/mydata2.txt)
+,match them with `mydata*.txt`
+
+```
+python pycture.py examples/mydefinition.cpy "examples/mydata*.txt" -o examples/out-multi.csv
+```
+
+`examples/out-multi.csv`
+
+```csv
+person.firstname;person.lastname;person.date-of-birth.date-of-birth-year;person.date-of-birth.date-of-birth-month;person.date-of-birth.date-of-birth-day
+luca                          ;piccinelli                    ;1985;03;16
+paolo                         ;venturi                       ;1991;12;16
+mario                         ;rossi                         ;2000;06;22
+andrea                        ;bianchi                       ;2001;12;25
+sandro                        ;verdi                         ;1960;02;02
+```
+
 ### Use group names `--use-groups`
 
 In the example above, the group `date-of-birth` is split in 3 column in the CSV. This is because it has 3 subfields.
@@ -274,7 +294,7 @@ will print
 
 ### Filter rows `--eq --neq --lt --gt`
 
-There are some basic filters available to filter out rows that doesn't match the given condition
+There are some basic filters available to filter out rows that doesn't match the given conditions.
 
 Given the following data file
 
