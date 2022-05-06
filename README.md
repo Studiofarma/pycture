@@ -337,3 +337,12 @@ person.firstname;person.lastname;person.date-of-birth.date-of-birth-year;person.
 luca                          ;piccinelli                    ;1985;03;16
 ```
 
+## Files with complex content (comments, multi line pictures etc.)
+
+Refer to these files to have an updated list of the corner cases handled.
+ - [tests/test_read_cobol_picture.py](tests/test_read_cobol_picture.py)
+ - [tests/test_read_cobol_record.py](tests/test_read_cobol_record.py)
+
+## Known Issues
+
+ - Cobol array tables are not yet parsed, then will have an undefined beaviour.
