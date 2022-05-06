@@ -30,13 +30,17 @@ The above instructions does the following:
 
 Pycture parses the file definition and creates an internal representation of it. 
 
-Pycture then uses this representation to print the headers of the CSV and split all the contigous record column, into CSV columns.
+Pycture then uses the variable names as column headings, and `start_at` and `length` to split all the contiguous record columns, into CSV columns.
 
-### Example
+## Features Examples
+
+Find example files in [examples](examples).
+
+### Print the definition structure as JSON `-p | --print-definition`
 
 Given the following picture definition
 
-`example/mydefinition.cpy`
+`examples/mydefinition.cpy`
 
 ```Cobol
 01 person.
@@ -51,7 +55,7 @@ Given the following picture definition
 we can see the internal representation running 
 
 ```sh
-python pycture.py example/mydefinition.cpy -p
+python pycture.py examples/mydefinition.cpy -p
 ```
 
 will print
@@ -104,9 +108,11 @@ will print
 
 ```
 
+### Basic conversion to CSV
+
 Given the following data file
 
-`example/mydata.txt`
+`examples/mydata.txt`
 
 ```
 luca                          piccinelli                    19850316
@@ -116,20 +122,40 @@ paolo                         venturi                       19911216
 Running
 
 ```
-python pycture.py example/mydefinition.cpy example/mydata.txt -o example/out.csv
+python pycture.py examples/mydefinition.cpy examples/mydata.txt -o examples/out.csv
 ```
 
 will output
 
-`example/out.csv`
+`examples/out.csv`
 
-```cvs
+```csv
 person.firstname;person.lastname;person.date-of-birth.date-of-birth-year;person.date-of-birth.date-of-birth-month;person.date-of-birth.date-of-birth-day
 luca                          ;piccinelli                    ;1985;03;16
 paolo                         ;venturi                       ;1991;12;16
 ```
 
-## Help `python pycture.py -h`
+### Use group names `--use-groups`
+
+In the example above, the group `date-of-birth` is split in 3 column in the CSV. This is because it has 3 subfields.
+
+You can use `--use-groups` and print it as a single column:
+
+```
+python pycture.py examples/mydefinition.cpy examples/mydata.txt -o examples/out-group.csv --use-groups person.date-of-birth
+```
+
+will output
+
+`examples/out-groups.csv`
+
+```csv
+person.firstname;person.lastname;person.date-of-birth
+luca                          ;piccinelli                    ;19850316
+paolo                         ;venturi                       ;19911216
+```
+
+## Help `-h | --help`
 
 ```
 usage: pycture.py [-h] [-o [OUTPUT]] [-vv] [-d] [-p] [--prefix [PREFIX]] [--use-groups USE_GROUPS [USE_GROUPS ...]] [--keep-only KEEP_ONLY [KEEP_ONLY ...]] [--redefines REDEFINES [REDEFINES ...]] [--eq EQ EQ]
