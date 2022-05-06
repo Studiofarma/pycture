@@ -155,6 +155,84 @@ luca                          ;piccinelli                    ;19850316
 paolo                         ;venturi                       ;19911216
 ```
 
+If you doubt the name of the group, you can print the JSON definition and watch there the correct name.
+
+### Keep only some column `--keep-only`
+
+You can give the list of the columns to keep:
+
+```
+python pycture.py examples/mydefinition.cpy examples/mydata.txt -o examples/out-keep-only.csv --keep-only person.lastname person.date-of-birth.date-of-birth-year
+```
+
+will output
+
+`examples/out-keep-only.csv`
+
+```csv
+person.lastname;person.date-of-birth.date-of-birth-year
+piccinelli                    ;1985
+venturi                       ;1991
+```
+
+### Use redefines `--redefines`
+
+Let's consider a definition that redefines a certain field:
+
+`examples/mydefinition-redefines.csv`
+
+```Cobol
+01 person.
+    02 firstname pic x(30).
+    02 lastname  pic x(30).
+    02 date-of-birth.
+        03 date-of-birth-year  pic 9(04).
+        03 date-of-birth-month pic 9(02).
+        03 date-of-birth-day   pic 9(02).
+    02 date-of-birth-x redefines date-of-birth pic x(08).
+```
+
+Pay attention to the last line.
+
+You can choose to use `date-of-birth-x` instead of `date-of-birth` in the internal structure representation.
+
+Lets' display it:
+
+```
+ python pycture.py examples/mydefinition-redefines.cpy -p --redefines date-of-birth-x
+```
+
+will print
+
+```json
+{
+    "name": "person",
+    "start_at": 0,
+    "length": 68,
+    "children_structures": [
+        {
+            "name": "person.firstname",
+            "start_at": 0,
+            "length": 30,
+            "children_structures": []
+        },
+        {
+            "name": "person.lastname",
+            "start_at": 30,
+            "length": 30,
+            "children_structures": []
+        },
+        {
+            "name": "person.date-of-birth-x",
+            "start_at": 60,
+            "length": 8,
+            "children_structures": []
+        }
+    ]
+}
+```
+
+
 ## Help `-h | --help`
 
 ```
