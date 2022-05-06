@@ -114,7 +114,10 @@ def read_record(picture_definition, ignore_prefix=''):
 
 def remove_all_comments_lines(picture_definition):
     return NEW_LINE.join(
-        [remove_bar_comments(p) for p in picture_definition.split(NEW_LINE) if not is_a_comment_line(p)])
+        [remove_bar_comments(p) \
+            for p in picture_definition.split(NEW_LINE) \
+            if not is_a_comment_line(p)]
+    )
 
 def remove_newlines(picture):
     return picture.replace(NEW_LINE, '')

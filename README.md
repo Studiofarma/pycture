@@ -346,3 +346,4 @@ Refer to these files to have an updated list of the corner cases handled.
 ## Known Issues
 
  - Cobol array tables are not yet parsed, then will have an undefined beaviour.
+ - `usage pointer` is not yet handled.
